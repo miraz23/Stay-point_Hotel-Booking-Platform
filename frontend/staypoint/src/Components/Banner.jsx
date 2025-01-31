@@ -44,9 +44,11 @@ const Banner = () => {
                 <option>3 Rooms</option>
               </select>
             </div>
-            <button className="bg-orange-500 hover:bg-orange-600 text-white px-6 py-3 rounded-lg font-bold">
+            <div className="mt-[30px]">
+            <button className="bg-gradient-to-r from-cyan-800 to-cyan-500 cursor-pointer text-white transition-all duration-500 ease-in-out hover:opacity-90 px-6 py-3 rounded-lg font-bold">
               Search
             </button>
+            </div>
           </div>
         </div>
       </div>
