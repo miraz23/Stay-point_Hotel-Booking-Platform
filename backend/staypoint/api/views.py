@@ -1,7 +1,8 @@
 from django.shortcuts import render
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
-from .hotels import hotels
+from .models import Hotel
+from .serializers import HotelSerializer
 
 # Create your views here.
 
@@ -11,4 +12,9 @@ def getRoutes(request):
 
 @api_view(['GET'])
 def getHotels(request):
-    return Response(hotels)
+    hotels = Hotel.objects.all()
+    serializer = HotelSerializer(hotels, many=True)
+
+    print(serializer.data)
+
+    return Response(serializer.data)
