@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 
 const Header = () => {
   return (
@@ -13,11 +14,11 @@ const Header = () => {
 
         <nav className="flex items-center space-x-2">
           <ul className="flex text-xl items-center space-x-7">
-            <li className="font-semibold text-[#333] hover:text-[#000] cursor-pointer">Home</li>
-            <li className="font-semibold text-[#333] hover:text-[#000] cursor-pointer">Hotels</li>
-            <li className="font-semibold text-[#333] hover:text-[#000] cursor-pointer">Bookings</li>
-            <li className="font-semibold text-[#333] hover:text-[#000] cursor-pointer">Contact Us</li>
-            <li className="font-semibold text-[#333] hover:text-[#000] cursor-pointer">About Us</li>
+            <Link to="/"><li className="font-semibold text-[#333] hover:text-[#000] cursor-pointer">Home</li></Link>
+            <Link to="/hotels/"><li className="font-semibold text-[#333] hover:text-[#000] cursor-pointer">Hotels</li></Link>
+            <Link to="/my-bookings"><li className="font-semibold text-[#333] hover:text-[#000] cursor-pointer">Bookings</li></Link>
+            <Link to="/about-us"><li className="font-semibold text-[#333] hover:text-[#000] cursor-pointer">About Us</li></Link>
+            <Link to="/contact-us"><li className="font-semibold text-[#333] hover:text-[#000] cursor-pointer">Contact Us</li></Link>
           </ul>
         </nav>
 
