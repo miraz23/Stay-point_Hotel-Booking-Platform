@@ -13,8 +13,11 @@ const Header = () => {
 
         <nav className="flex items-center space-x-2">
           <ul className="flex text-xl items-center space-x-7">
-            <li className="font-semibold uppercase text-[#333] hover:text-[#000] cursor-pointer">Hotels</li>
-            <li className="font-semibold uppercase text-[#333] hover:text-[#000] cursor-pointer">Bookings</li>
+            <li className="font-semibold text-[#333] hover:text-[#000] cursor-pointer">Home</li>
+            <li className="font-semibold text-[#333] hover:text-[#000] cursor-pointer">Hotels</li>
+            <li className="font-semibold text-[#333] hover:text-[#000] cursor-pointer">Bookings</li>
+            <li className="font-semibold text-[#333] hover:text-[#000] cursor-pointer">Contact Us</li>
+            <li className="font-semibold text-[#333] hover:text-[#000] cursor-pointer">About Us</li>
           </ul>
         </nav>
 
