@@ -16,8 +16,8 @@ const Hotels = () => {
     }, [dispatch]);
 
     return (
-        <div className="text-center my-6 mx-10">
-            <h1 className="text-4xl font-bold text-gray-800 p-2">Our Hotels</h1>
+        <div className="text-center mt-25 mb-6 mx-10">
+            <h1 className="text-4xl font-bold text-gray-800 p-2">Our <span className='text-cyan-800'>Hotels</span></h1>
             <p className="text-lg my-1 text-gray-600">Explore hundreds of hotels opportunities with all the information you need.</p>
             
             <div className="w-full flex flex-wrap gap-4 mt-10">

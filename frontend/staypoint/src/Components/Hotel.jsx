@@ -18,7 +18,7 @@ const Hotel = () => {
     }, [dispatch, id]);
 
     return (
-        <div className="text-center my-6 mx-10">
+        <div className="text-center mt-25 mb-6 mx-10">
             {loading ? (
                 <Loader />
             ) : error ? (
@@ -28,7 +28,7 @@ const Hotel = () => {
                     <div className='w-1/2 aspect-[3/2]'>
                         <img src={`http://127.0.0.1:8000/${hotel.image}`} alt={hotel.name} className="w-full h-full object-cover rounded-lg" />
                     </div>
-                    <div className='w-1/2 text-left'>
+                    <div className='w-1/2 text-left p-2'>
                         <div>
                           <div className='flex items-center'>
                             <h1 className='text-4xl font-semibold'>{hotel.name}</h1>
@@ -42,7 +42,7 @@ const Hotel = () => {
                             <span className="text-gray-600">{hotel.location}</span>
                           </div>
                         </div>
-                        <p className='text-xl'>{hotel.description}</p>
+                        <p className='text-[16px]'>{hotel.description}</p>
                     </div>
                 </div>
             )}
