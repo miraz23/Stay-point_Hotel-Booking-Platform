@@ -18,3 +18,10 @@ def getHotels(request):
     print(serializer.data)
 
     return Response(serializer.data)
+
+@api_view(['GET'])
+def getHotel(request, pk):
+    hotel = Hotel.objects.get(id=pk)
+    serializer = HotelSerializer(hotel, many=False)
+
+    return Response(serializer.data)
