@@ -72,7 +72,7 @@ const Home = () => {
       </div>
 
       {/*---------------- Featured Hotels ----------------*/}
-      <div className="text-center mt-10 mb-6 mx-10">
+      <div className="text-center my-10 mx-10">
         <h1 className="text-4xl font-bold text-gray-800 p-2">Featured <span className='text-cyan-600'>Hotels</span></h1>
         <p className="text-lg my-1 text-gray-600">Stay at the best-rated hotels for an unforgettable experience.</p>
         <div className="w-full flex flex-wrap gap-4 mt-10">

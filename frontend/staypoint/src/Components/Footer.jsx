@@ -2,7 +2,7 @@ import React from 'react'
 
 function Footer() {
   return (
-    <footer className="shadow-2xl mt-20 bg-slate-200 mx-10 rounded-t-2xl">
+    <footer className="shadow-2xl bg-slate-200 mx-10 rounded-t-2xl">
         <div className="text-[#333]">
             <div className="pt-10">
                 <h1 className="text-center text-3xl line-clamp-2 ml-2 cursor-pointer bg-gradient-to-r from-cyan-800 to-cyan-500 text-transparent bg-clip-text" style={{ fontFamily: "Gochi Hand, cursive" }}>

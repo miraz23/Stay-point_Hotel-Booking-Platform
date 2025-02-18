@@ -15,10 +15,11 @@ const Hotel = () => {
 
     useEffect(() => {
         dispatch(listHotelDetails(id));
+        window.scrollTo(0, 0);
     }, [dispatch, id]);
 
     return (
-        <div className="text-center mt-25 mb-6 mx-10">
+        <div className="text-center my-25 mx-10">
             {loading ? (
                 <Loader />
             ) : error ? (
