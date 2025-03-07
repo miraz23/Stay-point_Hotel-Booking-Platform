@@ -24,9 +24,11 @@ const Header = () => {
           </nav>
 
           <div className="flex items-center space-x-2">
+            <Link to="/auth/login">
               <button className="bg-gradient-to-r from-cyan-800 to-cyan-500 cursor-pointer text-white text-sm transition-all duration-500 ease-in-out hover:opacity-90 px-3 py-2 rounded-lg uppercase">
                 Login
               </button>
+            </Link>
           </div>
         </div>
       </div>
