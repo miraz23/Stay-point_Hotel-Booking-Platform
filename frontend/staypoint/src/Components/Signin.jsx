@@ -57,28 +57,25 @@ export default function Signin() {
 
   return (
     <div className="flex min-h-screen flex-col md:flex-row">
-      <div className="w-full md:w-1/2 bg-indigo-50 p-12 flex flex-col justify-center">
-        <div className="max-w-lg mx-auto">
-          <div className="flex items-center mb-5">
-            <h1 className="text-[30px] line-clamp-2 cursor-pointer bg-gradient-to-r from-cyan-800 to-cyan-500 text-transparent bg-clip-text" style={{ fontFamily: "Gochi Hand, cursive" }}>
-              STAY POINT
-            </h1>
-          </div>
-          
-          <h2 className="text-3xl font-bold text-gray-800 mb-6">Book Your Perfect Stay</h2>
-          <div className="space-y-8">
-            {features.map((feature, index) => (
-              <div key={index} className="flex items-start space-x-4">
-                <div className="w-8 h-8 bg-indigo-100 rounded-lg flex items-center justify-center flex-shrink-0">
-                  <feature.Icon size={20} className="text-cyan-500" />
-                </div>
-                <div>
-                  <h2 type={6} className="font-semibold mb-1">{feature.title}</h2>
-                  <p className="text-gray-600">{feature.description}</p>
-                </div>
+      <div className="w-full md:w-1/2 bg-indigo-50 p-12 flex flex-col justify-center max-w-lg mx-auto">
+        <div className="flex items-center mb-5">
+          <h1 className="text-[30px] line-clamp-2 cursor-pointer bg-gradient-to-r from-cyan-800 to-cyan-500 text-transparent bg-clip-text" style={{ fontFamily: "Gochi Hand, cursive" }}>
+            STAY POINT
+          </h1>
+        </div>
+        <h2 className="text-3xl font-bold text-gray-800 mb-6">Book Your Perfect Stay</h2>
+        <div className="space-y-8">
+          {features.map((feature, index) => (
+            <div key={index} className="flex items-start space-x-4">
+              <div className="w-8 h-8 bg-indigo-100 rounded-lg flex items-center justify-center flex-shrink-0">
+                <feature.Icon size={20} className="text-cyan-500" />
               </div>
-            ))}
-          </div>
+              <div>
+                <h2 type={6} className="font-semibold mb-1">{feature.title}</h2>
+                <p className="text-gray-600">{feature.description}</p>
+              </div>
+            </div>
+          ))}
         </div>
       </div>
       
@@ -86,7 +83,7 @@ export default function Signin() {
         <div className="max-w-md w-full">
           <div className="text-center mb-8">
             <h2 className="text-3xl font-bold text-gray-900">Create your account</h2>
-            <h2 className="mt-2 text-sm text-gray-600">Find thousands of hotels already using Stay Point</h2>
+            <h2 className="mt-2 text-md text-gray-600">Find thousands of hotels already using Stay Point</h2>
           </div>
           
           <form className="space-y-6" onSubmit={handleSubmit(handleSignin)}>
@@ -128,7 +125,7 @@ export default function Signin() {
             <button className="w-full  px-4 py-2 text-sm rounded-lg shadow-sm transition-all duration-500 ease-in-out hover:opacity-90 cursor-pointer text-white bg-gradient-to-r from-cyan-500 to-cyan-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-cyan-800" type="submit"> Create account </button>
           </form>
           <p className="mt-6 text-center text-sm text-gray-600">
-            Already have an account? <a className="text-cyan-500 transition-all duration-500 ease-in-out hover:text-cyan-800 cursor-pointer" to="/auth/sign-in"> Log in</a>
+            Already have an account? <a className="text-cyan-500 text-md transition-all duration-500 ease-in-out hover:text-cyan-800 cursor-pointer" to="/auth/sign-in"> Log in</a>
           </p>
         </div>
       </div>
