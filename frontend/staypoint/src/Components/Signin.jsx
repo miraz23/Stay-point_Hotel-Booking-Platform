@@ -1,9 +1,11 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import axios from "axios";
+import { useDispatch, useSelector } from "react-redux";
+import { signin } from "../actions/userActions";
 import { toast } from "react-hot-toast";
+import { useNavigate } from "react-router-dom";
 import { IconShieldCheck, IconDeviceDesktop, IconRocket } from "@tabler/icons-react";
 
 const features = [
@@ -24,7 +26,8 @@ const features = [
   },
 ];
 
-const schema = z.object({
+const schema = z
+  .object({
     fname: z.string().min(2, "First name must be at least 2 characters"),
     lname: z.string().min(2, "Last name must be at least 2 characters"),
     email: z.string().email("Invalid email format"),
@@ -40,19 +43,22 @@ export default function Signin() {
   const { register, handleSubmit, formState: { errors } } = useForm({ resolver: zodResolver(schema) });
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  
+  const userSignin = useSelector((state) => state.userSignin);
+  const { loading, userInfo, error } = userSignin;
 
-  const handleSignin = async (data) => {
-    try {
-      await axios.post("http://127.0.0.1:8000/api/users/signin/", {
-        fname: data.fname,
-        lname: data.lname,
-        email: data.email,
-        password: data.password,
-      });
-      toast.success("Check your email for activation link");
-    } catch (error) {
-      toast.error("Error during registration");
+  useEffect(() => {
+    if (userInfo) {
+      toast.success("Successfully signed in!");
+      navigate("/");
     }
+  }, [userInfo, navigate]);
+
+  const handleSignin = (data) => {
+    dispatch(signin(data.fname, data.lname, data.email, data.password));
   };
 
   return (
@@ -86,6 +92,7 @@ export default function Signin() {
             <h2 className="mt-2 text-md text-gray-600">Find thousands of hotels already using Stay Point</h2>
           </div>
           
+          {error && <p className="text-red-500 text-center pb-5">{error}</p>}
           <form className="space-y-6" onSubmit={handleSubmit(handleSignin)}>
             <div className="grid grid-cols-2 gap-4">
               <div>
@@ -122,7 +129,9 @@ export default function Signin() {
                 <a href="#" className="text-cyan-500 transition-all duration-500 ease-in-out hover:text-cyan-800 cursor-pointer">Privacy Policy</a>
               </label>
             </div>
-            <button className="w-full  px-4 py-2 text-sm rounded-lg shadow-sm transition-all duration-500 ease-in-out hover:opacity-90 cursor-pointer text-white bg-gradient-to-r from-cyan-500 to-cyan-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-cyan-800" type="submit"> Create account </button>
+            <button className="w-full px-4 py-2 text-sm rounded-lg shadow-sm transition-all duration-500 ease-in-out hover:opacity-90 cursor-pointer text-white bg-gradient-to-r from-cyan-500 to-cyan-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-cyan-800" type="submit"  disabled={loading}> 
+              {loading ? "Signing up..." : "Create account"}
+            </button>
           </form>
           <p className="mt-6 text-center text-sm text-gray-600">
             Already have an account? <a className="text-cyan-500 text-md transition-all duration-500 ease-in-out hover:text-cyan-800 cursor-pointer" to="/auth/sign-in"> Log in</a>

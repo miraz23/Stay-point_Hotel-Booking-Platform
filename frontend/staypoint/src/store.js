@@ -2,10 +2,13 @@ import { createStore, combineReducers, applyMiddleware } from 'redux';
 import thunk from 'redux-thunk';
 import { composeWithDevTools } from 'redux-devtools-extension';
 import { hotelListReducer, hotelDetailsReducer } from './reducers/hotelReducers';
+import { userSigninReducer, userLoginReducer} from './reducers/userReducers';
 
 const reducer = combineReducers({
     hotelsList: hotelListReducer,
-    hotelDetails: hotelDetailsReducer
+    hotelDetails: hotelDetailsReducer,
+    userSignin: userSigninReducer,
+    userLogin: userLoginReducer,
 });
 
 const initialState = {};
