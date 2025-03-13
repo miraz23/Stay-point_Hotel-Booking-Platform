@@ -1,5 +1,5 @@
 import React from 'react';
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Routes, useLocation } from 'react-router-dom';
 import Headers from './components/Header';
 import Home from './components/Home';
 import Hotels from './components/Hotels';
@@ -8,16 +8,28 @@ import Bookings from './components/Bookings';
 import AboutUs from './components/AboutUs';
 import ContactUs from './components/ContactUs';
 import Footer from './components/Footer';
-import Login from './components/Login'
-import Signin from './components/Signin'
+import Login from './components/Login';
+import Signin from './components/Signin';
 import { Toaster } from "react-hot-toast";
+
+const Layout = ({ children }) => {
+  const location = useLocation();
+  const hideHeaderFooter = location.pathname === "/auth/login" || location.pathname === "/auth/signin";
+
+  return (
+    <div>
+      {!hideHeaderFooter && <Headers />}
+      <Toaster />
+      {children}
+      {!hideHeaderFooter && <Footer />}
+    </div>
+  );
+};
 
 const App = () => {
   return (
     <Router>
-      <div>
-        <Headers />
-        <Toaster />
+      <Layout>
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/hotels" element={<Hotels />} />
@@ -28,8 +40,7 @@ const App = () => {
           <Route path="/auth/login" element={<Login />} />
           <Route path="/auth/signin" element={<Signin />} />
         </Routes>
-        <Footer />
-      </div>
+      </Layout>
     </Router>
   );
 };

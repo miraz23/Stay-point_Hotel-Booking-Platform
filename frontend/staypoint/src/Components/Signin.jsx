@@ -5,7 +5,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useDispatch, useSelector } from "react-redux";
 import { signin } from "../actions/userActions";
 import { toast } from "react-hot-toast";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { IconShieldCheck, IconDeviceDesktop, IconRocket } from "@tabler/icons-react";
 
 const features = [
@@ -52,7 +52,7 @@ export default function Signin() {
 
   useEffect(() => {
     if (userInfo) {
-      toast.success("Successfully signed in!");
+      toast.success("Check your email for verification link.");
       navigate("/");
     }
   }, [userInfo, navigate]);
@@ -63,7 +63,7 @@ export default function Signin() {
 
   return (
     <div className="flex min-h-screen flex-col md:flex-row">
-      <div className="w-full md:w-1/2 bg-indigo-50 p-12 flex flex-col justify-center max-w-lg mx-auto">
+      <div className="w-full md:w-1/2 bg-indigo-50 p-12 flex flex-col justify-center max-w-lg">
         <div className="flex items-center mb-5">
           <h1 className="text-[30px] line-clamp-2 cursor-pointer bg-gradient-to-r from-cyan-800 to-cyan-500 text-transparent bg-clip-text" style={{ fontFamily: "Gochi Hand, cursive" }}>
             STAY POINT
@@ -85,7 +85,7 @@ export default function Signin() {
         </div>
       </div>
       
-      <div className="w-full md:w-1/2 bg-white flex items-center justify-center p-12">
+      <div className="w-full md:w-1/2 bg-white flex items-center justify-center p-12 mx-auto">
         <div className="max-w-md w-full">
           <div className="text-center mb-8">
             <h2 className="text-3xl font-bold text-gray-900">Create your account</h2>
@@ -134,7 +134,7 @@ export default function Signin() {
             </button>
           </form>
           <p className="mt-6 text-center text-sm text-gray-600">
-            Already have an account? <a className="text-cyan-500 text-md transition-all duration-500 ease-in-out hover:text-cyan-800 cursor-pointer" to="/auth/sign-in"> Log in</a>
+            Already have an account? <Link className="text-cyan-500 text-md transition-all duration-500 ease-in-out hover:text-cyan-800 cursor-pointer" to="/auth/login"> Log in</Link>
           </p>
         </div>
       </div>

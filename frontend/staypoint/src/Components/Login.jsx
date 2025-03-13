@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { login } from "../actions/userActions";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -73,7 +73,7 @@ export default function Login() {
         <div className="text-center text-sm">
           <p className="text-gray-600">
             Don&apos;t have an account?{" "}
-            <a className="text-cyan-500 text-md transition-all duration-500 ease-in-out hover:text-cyan-800 cursor-pointer" href="/auth/signin">Sign in</a>
+            <Link className="text-cyan-500 text-md transition-all duration-500 ease-in-out hover:text-cyan-800 cursor-pointer" to="/auth/signin">Sign in</Link>
           </p>
         </div>
       </div>
