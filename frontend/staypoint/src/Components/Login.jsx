@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { login } from "../actions/userActions";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
+import { IconEye, IconEyeClosed } from '@tabler/icons-react';
 
 const loginSchema = z.object({
   email: z.string().email({ message: "Invalid email format" }),
@@ -13,12 +14,9 @@ const loginSchema = z.object({
 
 export default function Login() {
   const { register, handleSubmit, formState: { errors }} = useForm({ resolver: zodResolver(loginSchema) });
-
   const dispatch = useDispatch();
   const navigate = useNavigate();
-
   const { loading, userInfo, error } = useSelector((state) => state.userLogin);
-  
   const [showPassword, setShowPassword] = useState(false);
 
   useEffect(() => {
@@ -51,8 +49,8 @@ export default function Login() {
           </div>
           <div className="relative">
             <input className="block w-full rounded-lg border border-gray-300 px-4 py-2 pr-10" type={showPassword ? "text" : "password"} placeholder="Password" {...register("password")}/>
-            <button type="button" className="absolute right-3 top-3 text-gray-500" onClick={() => setShowPassword(!showPassword)}>
-              {showPassword ? <i className="bi bi-eye-slash cursor-pointer"></i> : <i className="bi bi-eye cursor-pointer"></i>}
+            <button type="button" className="absolute right-3 top-3 text-gray-500 cursor-pointer" onClick={() => setShowPassword(!showPassword)}>
+              {showPassword ? <IconEyeClosed /> : <IconEye />}
             </button>
             {errors.password && <p className="text-red-500 text-sm">{errors.password.message}</p>}
           </div>
@@ -73,7 +71,7 @@ export default function Login() {
         <div className="text-center text-sm">
           <p className="text-gray-600">
             Don&apos;t have an account?{" "}
-            <Link className="text-cyan-500 text-md transition-all duration-500 ease-in-out hover:text-cyan-800 cursor-pointer" to="/auth/signin">Sign in</Link>
+            <a className="text-cyan-500 text-md transition-all duration-500 ease-in-out hover:text-cyan-800 cursor-pointer" href="/auth/signin">Sign in</a>
           </p>
         </div>
       </div>

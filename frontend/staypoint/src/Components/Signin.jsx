@@ -4,9 +4,8 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useDispatch, useSelector } from "react-redux";
 import { signin } from "../actions/userActions";
-import { toast } from "react-hot-toast";
-import { Link, useNavigate } from "react-router-dom";
-import { IconShieldCheck, IconDeviceDesktop, IconRocket } from "@tabler/icons-react";
+import { useNavigate } from "react-router-dom";
+import { IconShieldCheck, IconDeviceDesktop, IconRocket, IconEye, IconEyeClosed } from '@tabler/icons-react';
 
 const features = [
   {
@@ -35,7 +34,7 @@ const schema = z
     confirmPassword: z.string(),
   })
   .refine((data) => data.password === data.confirmPassword, {
-    message: "Passwords do not match",
+    message: "Password does not match",
     path: ["confirmPassword"],
   });
 
@@ -52,7 +51,6 @@ export default function Signin() {
 
   useEffect(() => {
     if (userInfo) {
-      toast.success("Check your email for verification link.");
       navigate("/");
     }
   }, [userInfo, navigate]);
@@ -63,7 +61,7 @@ export default function Signin() {
 
   return (
     <div className="flex min-h-screen flex-col md:flex-row">
-      <div className="w-full md:w-1/2 bg-indigo-50 p-12 flex flex-col justify-center max-w-lg">
+      <div className="w-full md:w-1/2 bg-indigo-50 p-12 flex flex-col justify-center">
         <div className="flex items-center mb-5">
           <h1 className="text-[30px] line-clamp-2 cursor-pointer bg-gradient-to-r from-cyan-800 to-cyan-500 text-transparent bg-clip-text" style={{ fontFamily: "Gochi Hand, cursive" }}>
             STAY POINT
@@ -108,18 +106,22 @@ export default function Signin() {
               <input className="block w-full rounded-lg border border-gray-300 px-4 py-2" type="email" placeholder="Email" {...register("email")} />
               {errors.email && <p className="text-red-500">{errors.email.message}</p>}
             </div>
-            <div className="relative">
-              <input className="block w-full rounded-lg border border-gray-300 px-4 py-2" type={showPassword ? "text" : "password"} placeholder="Password" {...register("password")} />
-              <button type="button" className="absolute inset-y-0 right-3 flex items-center" onClick={() => setShowPassword(!showPassword)}>
-                {showPassword ? <i class="bi bi-eye-slash cursor-pointer"></i> : <i class="bi bi-eye cursor-pointer"></i>}
-              </button>
+            <div>
+              <div className="relative">
+                <input className="block w-full rounded-lg border border-gray-300 px-4 py-2" type={showPassword ? "text" : "password"} placeholder="Password" {...register("password")} />
+                <button type="button" className="absolute inset-y-0 right-3 flex items-center text-gray-500 cursor-pointer" onClick={() => setShowPassword(!showPassword)}>
+                  {showPassword ? <IconEyeClosed /> : <IconEye />}
+                </button>
+              </div>
               {errors.password && <p className="text-red-500">{errors.password.message}</p>}
             </div>
-            <div className="relative">
-              <input className="block w-full rounded-lg border border-gray-300 px-4 py-2" type={showConfirmPassword ? "text" : "password"} placeholder="Confirm Password" {...register("confirmPassword")} />
-              <button type="button" className="absolute inset-y-0 right-3 flex items-center" onClick={() => setShowConfirmPassword(!showConfirmPassword)}>
-                {showConfirmPassword ? <i class="bi bi-eye-slash cursor-pointer"></i> : <i class="bi bi-eye cursor-pointer"></i>}
-              </button>
+            <div>
+              <div className="relative">
+                <input className="block w-full rounded-lg border border-gray-300 px-4 py-2" type={showConfirmPassword ? "text" : "password"} placeholder="Confirm Password" {...register("confirmPassword")} />
+                <button type="button" className="absolute inset-y-0 right-3 flex items-center text-gray-500 cursor-pointer" onClick={() => setShowConfirmPassword(!showConfirmPassword)}>
+                  {showConfirmPassword ? <IconEyeClosed /> : <IconEye />}
+                </button>
+              </div>
               {errors.confirmPassword && <p className="text-red-500">{errors.confirmPassword.message}</p>}
             </div>
             <div className="flex items-center">
@@ -134,7 +136,7 @@ export default function Signin() {
             </button>
           </form>
           <p className="mt-6 text-center text-sm text-gray-600">
-            Already have an account? <Link className="text-cyan-500 text-md transition-all duration-500 ease-in-out hover:text-cyan-800 cursor-pointer" to="/auth/login"> Log in</Link>
+            Already have an account? <a className="text-cyan-500 text-md transition-all duration-500 ease-in-out hover:text-cyan-800 cursor-pointer" href="/auth/login"> Log in</a>
           </p>
         </div>
       </div>

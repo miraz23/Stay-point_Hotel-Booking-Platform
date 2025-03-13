@@ -70,6 +70,9 @@ class MyTokenObtainPairView(TokenObtainPairView):
 @api_view(['POST'])
 def signin(request):
     data = request.data
+
+    if User.objects.filter(email=data['email']).exists():
+        return Response({"detail": "A user with this email already exists"}, status=status.HTTP_400_BAD_REQUEST)
     
     try:
         user = User.objects.create(
