@@ -6,6 +6,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { signin } from "../actions/userActions";
 import { useNavigate } from "react-router-dom";
 import { IconShieldCheck, IconDeviceDesktop, IconRocket, IconEye, IconEyeClosed } from '@tabler/icons-react';
+import { Link } from 'react-router-dom'
 
 const features = [
   {
@@ -51,7 +52,7 @@ export default function Signin() {
 
   useEffect(() => {
     if (userInfo) {
-      navigate("/");
+      navigate("/auth/login");
     }
   }, [userInfo, navigate]);
 
@@ -136,7 +137,7 @@ export default function Signin() {
             </button>
           </form>
           <p className="mt-6 text-center text-sm text-gray-600">
-            Already have an account? <a className="text-cyan-500 text-md transition-all duration-500 ease-in-out hover:text-cyan-800 cursor-pointer" href="/auth/login"> Log in</a>
+            Already have an account? <Link className="text-cyan-500 text-md transition-all duration-500 ease-in-out hover:text-cyan-800 cursor-pointer" to="/auth/login"> Log in</Link>
           </p>
         </div>
       </div>

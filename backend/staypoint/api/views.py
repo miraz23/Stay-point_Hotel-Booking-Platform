@@ -10,6 +10,7 @@ from django.contrib.auth.models import User
 from rest_framework.permissions import IsAuthenticated, IsAdminUser
 from django.utils.encoding import force_bytes, force_str
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
+from django.contrib.auth.tokens import default_token_generator
 from django.core.mail import EmailMessage
 from django.template.loader import render_to_string
 from django.contrib.auth.hashers import make_password
@@ -119,3 +120,42 @@ class ActivateAccountView(View):
             return render(request,"activatesuccess.html")
         else:
             return render(request,"activatefail.html")
+        
+
+@api_view(['POST'])
+def forgot_password(request):
+    email = request.data.get('email')
+
+    try:
+        user = User.objects.get(email=email)
+        uid = urlsafe_base64_encode(force_bytes(user.pk))
+        token = default_token_generator.make_token(user)
+        reset_link = f"http://localhost:5173/auth/reset-password/{uid}/{token}/"
+
+        email_subject = "Reset Your Password"
+        message = render_to_string("password_reset_email.html", {'reset_link': reset_link})
+        email_message = EmailMessage(email_subject, message, settings.EMAIL_HOST_USER, [email])
+        email_message.send()
+
+        return Response({"detail": "Password reset email sent!"}, status=status.HTTP_200_OK)
+
+    except User.DoesNotExist:
+        return Response({"detail": "User not found"}, status=status.HTTP_404_NOT_FOUND)
+
+@api_view(['POST'])
+def reset_password(request, uidb64, token):
+    try:
+        uid = force_str(urlsafe_base64_decode(uidb64))
+        user = User.objects.get(pk=uid)
+
+        if not default_token_generator.check_token(user, token):
+            return Response({"detail": "Invalid token"}, status=status.HTTP_400_BAD_REQUEST)
+
+        new_password = request.data.get('password')
+        user.set_password(new_password)
+        user.save()
+
+        return Response({"detail": "Password reset successful!"}, status=status.HTTP_200_OK)
+
+    except (User.DoesNotExist, ValueError):
+        return Response({"detail": "Error resetting password"}, status=status.HTTP_400_BAD_REQUEST)

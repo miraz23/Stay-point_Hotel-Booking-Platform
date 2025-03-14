@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { IconUser, IconLogout2, IconUserCircle } from "@tabler/icons-react";
 import { logout } from "../actions/userActions";
@@ -7,6 +7,7 @@ import { USER_LOGIN_SUCCESS } from "../constants/userConstants";
 
 const Header = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const userInfo = useSelector((state) => state.userLogin.userInfo);
   const isAuthenticated = !!userInfo;
   const userName = userInfo?.name || "User";
@@ -23,6 +24,7 @@ const Header = () => {
 
   const handleLogout = () => {
     dispatch(logout());
+    navigate("/auth/login");
   };
 
   return (

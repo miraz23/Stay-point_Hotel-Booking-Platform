@@ -36,7 +36,7 @@ export default function Login() {
           <h1 className="text-[30px] cursor-pointer bg-gradient-to-r from-cyan-800 to-cyan-500 text-transparent bg-clip-text" style={{ fontFamily: "Gochi Hand, cursive" }}>
             STAY POINT
           </h1>
-          <h2 className="text-3xl font-bold text-gray-900 mt-3">Welcome back</h2>
+          <h2 className="text-3xl font-bold text-gray-900 mt-3">Welcome Back</h2>
           <p className="mt-2 text-md text-gray-600">Please log in to your account</p>
         </div>
 
@@ -60,7 +60,7 @@ export default function Login() {
               <input id="remember-me" name="remember-me" type="checkbox" className="h-4 w-4" />
               <label htmlFor="remember-me" className="ml-2 block text-sm text-gray-700">Remember me</label>
             </div>
-            <a href="#" className="text-cyan-500 hover:text-cyan-800">Forgot password?</a>
+            <a href="/auth/forgot-password" className="text-cyan-500 hover:text-cyan-800">Forgot password?</a>
           </div>
 
           <button className="w-full px-4 py-2 text-sm rounded-lg shadow-sm transition-all duration-500 ease-in-out hover:opacity-90 cursor-pointer text-white bg-gradient-to-r from-cyan-500 to-cyan-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-cyan-800" type="submit" disabled={loading}>
