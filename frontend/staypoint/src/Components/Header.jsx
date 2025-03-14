@@ -1,27 +1,29 @@
-import React from "react";
-import { Link, useNavigate } from "react-router-dom";
+import React, { useEffect } from "react";
+import { Link } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { IconUser, IconLogout2, IconUserCircle } from "@tabler/icons-react";
 import { logout } from "../actions/userActions";
-import { useEffect } from "react";
+import { USER_LOGIN_SUCCESS } from "../constants/userConstants";
 
 const Header = () => {
   const dispatch = useDispatch();
-  const navigate = useNavigate();
   const userInfo = useSelector((state) => state.userLogin.userInfo);
   const isAuthenticated = !!userInfo;
   const userName = userInfo?.name || "User";
 
+  useEffect(() => {
+    const userInfoFromStorage = localStorage.getItem("userInfo")
+      ? JSON.parse(localStorage.getItem("userInfo"))
+      : null;
+
+    if (userInfoFromStorage) {
+      dispatch({ type: USER_LOGIN_SUCCESS, payload: userInfoFromStorage });
+    }
+  }, [dispatch]);
+
   const handleLogout = () => {
     dispatch(logout());
   };
-
-  useEffect(() => {
-    if (!userInfo) {
-      navigate("/auth/login");
-    }
-  }, [userInfo, navigate]);console.log("User Info from Redux:", userInfo);
-
 
   return (
     <header className="flex justify-center">
@@ -45,17 +47,17 @@ const Header = () => {
           <div className="flex items-center">
             {isAuthenticated ? (
               <>
-                <button onClick={handleLogout} className="cursor-pointer text-gray-600 hover:text-red-500 transition px-2">
+                <button onClick={handleLogout} className="cursor-pointer text-gray-700 hover:text-gray-900 transition px-2">
                   <IconLogout2 />
                 </button>
-                <button className="cursor-pointer flex hover:text-cyan-500 text-gray-600">
+                <button className="cursor-pointer flex hover:text-gray-900 text-gray-700">
                   <IconUserCircle />
                   <span className="px-1"> {userName} </span>
                 </button>
               </>
             ) : (
               <Link to="/auth/login">
-                <IconUser className="cursor-pointer text-gray-600" />
+                <IconUser className="cursor-pointer text-gray-700 hover:text-gray-900" />
               </Link>
             )}
           </div>
