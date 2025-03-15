@@ -52,10 +52,12 @@ const Header = () => {
                 <button onClick={handleLogout} className="cursor-pointer text-gray-700 hover:text-gray-900 transition px-2">
                   <IconLogout2 />
                 </button>
-                <button className="cursor-pointer flex hover:text-gray-900 text-gray-700">
-                  <IconUserCircle />
-                  <span className="px-1"> {userName} </span>
-                </button>
+                <Link to="/auth/profile">
+                  <button className="cursor-pointer flex hover:text-gray-900 text-gray-700">
+                    <IconUserCircle />
+                    <span className="px-1"> {userName} </span>
+                  </button>
+                </Link>
               </>
             ) : (
               <Link to="/auth/login">

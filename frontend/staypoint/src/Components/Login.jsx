@@ -21,6 +21,7 @@ export default function Login() {
 
   useEffect(() => {
     if (userInfo) {
+      localStorage.setItem("token", userInfo.token);
       navigate("/");
     }
   }, [userInfo, navigate]);

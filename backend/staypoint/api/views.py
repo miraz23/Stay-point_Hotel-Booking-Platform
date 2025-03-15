@@ -168,3 +168,10 @@ def reset_password(request, uidb64, token):
 
     except (User.DoesNotExist, ValueError):
         return Response({"detail": "Error resetting password"}, status=status.HTTP_400_BAD_REQUEST)
+    
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def getUserProfile(request):
+    user = request.user
+    serializer = UserSerializer(user, many=False)
+    return Response(serializer.data)
