@@ -62,7 +62,7 @@ const Home = () => {
                 </select>
               </div>
               <div className="mt-[30px]">
-              <button className="bg-gradient-to-r from-cyan-800 to-cyan-500 cursor-pointer text-white text-sm transition-all duration-500 ease-in-out hover:opacity-90 px-6 py-2 rounded-lg font-bold">
+              <button className="px-6 py-2 text-white text-md font-semibold rounded-lg shadow-md bg-cyan-500 hover:opacity-90 transition cursor-pointer">
                 Search
               </button>
               </div>
@@ -73,7 +73,7 @@ const Home = () => {
 
       {/*---------------- Featured Hotels ----------------*/}
       <div className="text-center my-10 mx-10">
-        <h1 className="text-4xl font-bold text-gray-800 p-2">Featured <span className='text-cyan-600'>Hotels</span></h1>
+        <h1 className="text-4xl font-bold text-gray-800 p-2">Featured <span className='text-cyan-500'>Hotels</span></h1>
         <p className="text-lg my-1 text-gray-600">Stay at the best-rated hotels for an unforgettable experience.</p>
         <div className="w-full flex flex-wrap gap-4 mt-10">
           {loading ? (
@@ -104,9 +104,7 @@ const Home = () => {
                           </div>
                       </div>
                       <Link to={`/hotels/${hotel.id}`}>
-                          <button className="w-full bg-gradient-to-r from-cyan-800 to-cyan-500 cursor-pointer text-white py-2 rounded-lg font-semibold 
-                              transition-all duration-500 ease-in-out 
-                              hover:opacity-90">
+                          <button className="w-full px-6 py-2 text-white text-md font-semibold rounded-lg shadow-md bg-cyan-500 hover:opacity-90 transition cursor-pointer">
                               View Details
                           </button>
                       </Link>

@@ -44,9 +44,7 @@ const Hotels = () => {
                                     </div>
                                 </div>
                                 <Link to={`/hotels/${hotel.id}`}>
-                                    <button className="w-full bg-gradient-to-r from-cyan-800 to-cyan-500 cursor-pointer text-white py-2 rounded-lg font-semibold 
-                                        transition-all duration-500 ease-in-out 
-                                        hover:opacity-90">
+                                    <button className="w-full px-6 py-2 text-white text-md font-semibold rounded-lg shadow-md bg-cyan-500 hover:opacity-90 transition cursor-pointer">
                                         View Details
                                     </button>
                                 </Link>
