@@ -18,8 +18,17 @@ from .utils import generate_token
 from django.conf import settings
 from rest_framework import status
 from django.views import View
+import threading
 
 # Create your views here.
+
+class EmailThread(threading.Thread):
+    def __init__(self, email_message):
+        self.email_message = email_message
+        threading.Thread.__init__(self)
+
+    def run(self):
+        self.email_message.send()
 
 @api_view(['GET'])
 def getRoutes(request):
@@ -96,7 +105,7 @@ def signin(request):
             }
         )
         email_message = EmailMessage(email_subject, message, settings.EMAIL_HOST_USER, [data['email']])
-        email_message.send()
+        EmailThread(email_message).start()
 
         serialize = UserSerializerWithToken(user, many=False)
         return Response(serialize.data)
@@ -120,7 +129,7 @@ class ActivateAccountView(View):
             return render(request,"activatesuccess.html")
         else:
             return render(request,"activatefail.html")
-        
+
 
 @api_view(['POST'])
 def forgot_password(request):
@@ -135,7 +144,7 @@ def forgot_password(request):
         email_subject = "Reset Your Password"
         message = render_to_string("password_reset_email.html", {'reset_link': reset_link})
         email_message = EmailMessage(email_subject, message, settings.EMAIL_HOST_USER, [email])
-        email_message.send()
+        EmailThread(email_message).start()
 
         return Response({"detail": "Password reset email sent!"}, status=status.HTTP_200_OK)
 
