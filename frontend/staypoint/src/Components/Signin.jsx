@@ -26,18 +26,21 @@ const features = [
   },
 ];
 
-const schema = z
-  .object({
-    fname: z.string().min(2, "First name must be at least 2 characters"),
-    lname: z.string().min(2, "Last name must be at least 2 characters"),
-    email: z.string().email("Invalid email format"),
-    password: z.string().min(6, "Password must be at least 6 characters"),
-    confirmPassword: z.string(),
-  })
-  .refine((data) => data.password === data.confirmPassword, {
-    message: "Password does not match",
-    path: ["confirmPassword"],
-  });
+const schema = z.object({
+  fname: z.string().min(2, "First name must be at least 2 characters"),
+  lname: z.string().min(2, "Last name must be at least 2 characters"),
+  email: z.string().email("Invalid email format"),
+  contactNo: z.string().min(11, "Contact number must be 11 digits"),
+  address: z.string().min(3, "Present address is required"),
+  password: z.string().min(6, "Password must be at least 6 characters"),
+  confirmPassword: z.string(),
+  nid: z.string().min(10, "NID must be 10 characters"),
+  image: z.any().optional(),
+}).refine((data) => data.password === data.confirmPassword, {
+  message: "Password does not match",
+  path: ["confirmPassword"],
+});
+
 
 export default function Signin() {
   const { register, handleSubmit, formState: { errors } } = useForm({ resolver: zodResolver(schema) });
@@ -57,8 +60,19 @@ export default function Signin() {
   }, [userInfo, navigate]);
 
   const handleSignin = (data) => {
-    dispatch(signin(data.fname, data.lname, data.email, data.password));
+    const formData = new FormData();
+    formData.append("fname", data.fname);
+    formData.append("lname", data.lname);
+    formData.append("email", data.email);
+    formData.append("contactNo", data.contactNo);
+    formData.append("address", data.address);
+    formData.append("password", data.password);
+    formData.append("nid", data.nid);
+    formData.append("image", data.image[0]);
+  
+    dispatch(signin(formData));
   };
+  
 
   return (
     <div className="flex min-h-screen flex-col md:flex-row">
@@ -103,9 +117,15 @@ export default function Signin() {
                 {errors.lname && <p className="text-red-500">{errors.lname.message}</p>}
               </div>
             </div>
-            <div>
-              <input className="block w-full rounded-lg border border-gray-300 px-4 py-2" type="email" placeholder="Email" {...register("email")} />
-              {errors.email && <p className="text-red-500">{errors.email.message}</p>}
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <input className="block w-full rounded-lg border border-gray-300 px-4 py-2" type="email" placeholder="Email" {...register("email")} />
+                {errors.email && <p className="text-red-500">{errors.email.message}</p>}
+              </div>
+              <div>
+                <input className="block w-full rounded-lg border border-gray-300 px-4 py-2" type="text" placeholder="Contact No" {...register("contactNo")} />
+                {errors.contactNo && <p className="text-red-500">{errors.contactNo.message}</p>}
+              </div>
             </div>
             <div>
               <div className="relative">
@@ -125,6 +145,20 @@ export default function Signin() {
               </div>
               {errors.confirmPassword && <p className="text-red-500">{errors.confirmPassword.message}</p>}
             </div>
+            <div>
+              <textarea rows={2} className="block w-full rounded-lg border border-gray-300 px-4 py-2" type="text" placeholder="Address" {...register("address")} />
+              {errors.address && <p className="text-red-500">{errors.address.message}</p>}
+            </div>
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <input className="block w-full rounded-lg border border-gray-300 px-4 py-2" type="text" placeholder="NID Number" {...register("nid")} />
+                {errors.nid && <p className="text-red-500">{errors.nid.message}</p>}
+              </div>
+              <div>
+                <input className="block w-full rounded-lg border border-gray-300 px-4 py-2" type="file" accept="image/*" {...register("image")} />
+              </div>
+            </div>
+
             <div className="flex items-center">
               <input className="rounded-lg border border-gray-300 px-4 py-2 h-4 w-4" type="checkbox" id="terms"/>
               <label htmlFor="terms" className="ml-2 block text-sm text-gray-700">

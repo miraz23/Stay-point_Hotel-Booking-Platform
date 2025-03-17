@@ -57,25 +57,26 @@ export default function UserProfile() {
 
   return (
     <div className="m-20 lg:m-40">
-      <div className='flex flex-col md:flex-row justify-between items-center'>
-        <div>
-          <h1 className='text-4xl font-semibold'>{user.name}</h1>
-          <span className="text-gray-600">{user.email}</span>
-        </div>
-        <div>
-          <button className="flex items-center px-6 py-3 my-5 bg-cyan-500 text-white text-[18px] font-semibold rounded-lg shadow-md hover:opacity-90 transition cursor-pointer">
-            <IconMapPinPlus className='mr-2' /> List your property
-          </button>
-        </div>
-      </div>
       {user ? (
+      <>
+        <div className='flex flex-col md:flex-row justify-between items-center'>
+          <div>
+            <h1 className='text-4xl font-semibold'>{user.name}</h1>
+            <span className="text-gray-600">{user.email}</span>
+          </div>
+          <div>
+            <button className="flex items-center px-6 py-3 my-5 bg-cyan-500 text-white text-[18px] font-semibold rounded-lg shadow-md hover:opacity-90 transition cursor-pointer">
+              <IconMapPinPlus className='mr-2' /> List your property
+            </button>
+          </div>
+        </div>
+        
         <form onSubmit={handleSubmit(onSubmit)}>
           <div className='w-full flex flex-col md:flex-row gap-5 my-6'>
-            <div className="relative w-50 md:w-70 mx-auto">
+            <div className="relative w-50 md:w-65 mx-auto">
               <img src={image} alt="Profile" className="w-full h-full p-2 border border-gray-300 rounded object-cover" />
               <input  type="file"  accept="image/*"  onChange={handleImageChange}  className="absolute inset-0 opacity-0 cursor-pointer"/>
             </div>
-
             <div className='w-full flex flex-col gap-5'>
               <div className='flex flex-col md:flex-row gap-5'>
                 <div className="w-full">
@@ -87,12 +88,10 @@ export default function UserProfile() {
                   {errors.nid_number && <p className="text-red-500">{errors.nid_number.message}</p>}
                 </div>
               </div>
-
               <div>
                 <textarea rows={2} {...register("present_address")}placeholder="Present Address" className="w-full p-2 border border-gray-300 rounded" />
                 {errors.present_address && <p className="text-red-500">{errors.present_address.message}</p>}
               </div>
-
               <div>
                 <textarea rows={2} {...register("permanent_address")}placeholder="Permanent Address" className="w-full p-2 border border-gray-300 rounded" />
                 {errors.permanent_address && <p className="text-red-500">{errors.permanent_address.message}</p>}
@@ -105,6 +104,7 @@ export default function UserProfile() {
             </button>
           </div>
         </form>
+      </>
       ) : (
         <p>User details not found.</p>
       )}

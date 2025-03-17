@@ -16,19 +16,19 @@ import {
     USER_RESET_PASSWORD_FAIL 
 } from "../constants/userConstants";
 
-export const signin = (fname, lname, email, password) => async (dispatch) => {
+export const signin = (formData) => async (dispatch) => {
     try {
         dispatch({ type: USER_SIGNIN_REQUEST });
 
         const config = {
             headers: {
-                "Content-Type": "application/json",
+                "Content-Type": "multipart/form-data",
             },
         };
 
         const { data } = await axios.post(
             "/api/users/signin/",
-            { fname, lname, email, password },
+            formData,
             config
         );
 

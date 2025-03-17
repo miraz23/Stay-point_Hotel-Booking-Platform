@@ -30,41 +30,6 @@ class EmailThread(threading.Thread):
     def run(self):
         self.email_message.send()
 
-@api_view(['GET'])
-def getRoutes(request):
-    return Response('Stay Point')
-
-@api_view(['GET'])
-def getHotels(request):
-    hotels = Hotel.objects.all()
-    serializer = HotelSerializer(hotels, many=True)
-
-    print(serializer.data)
-
-    return Response(serializer.data)
-
-@api_view(['GET'])
-def getHotel(request, pk):
-    hotel = Hotel.objects.get(id=pk)
-    serializer = HotelSerializer(hotel, many=False)
-
-    return Response(serializer.data)
-
-@api_view(['GET'])
-@permission_classes([IsAdminUser])
-def getUsers(request):
-    users = User.objects.all()
-    serializer = UserSerializer(users, many=True)
-
-    return Response(serializer.data)
-
-@api_view(['GET'])
-@permission_classes([IsAuthenticated])
-def getUserProfile(request):
-    user=request.user
-    serializer=UserSerializer(user, many=False)
-    return Response(serializer.data)
-
 class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
     def validate(self, attrs):
         data = super().validate(attrs)
@@ -80,10 +45,11 @@ class MyTokenObtainPairView(TokenObtainPairView):
 @api_view(['POST'])
 def signin(request):
     data = request.data
+    image = request.FILES.get('image')
 
     if User.objects.filter(email=data['email']).exists():
         return Response({"detail": "A user with this email already exists"}, status=status.HTTP_400_BAD_REQUEST)
-    
+
     try:
         user = User.objects.create(
             first_name=data['fname'],
@@ -93,6 +59,15 @@ def signin(request):
             password=make_password(data['password']),
             is_active=False
         )
+
+        profile = user.profile
+        profile.contact_no = data.get('contactNo')
+        profile.nid_number = data.get('nid')
+        profile.address = data.get('address')
+        if image:
+            profile.image = image
+
+        profile.save()
 
         email_subject = "Activate Your Account"
         message = render_to_string(
@@ -111,9 +86,7 @@ def signin(request):
         return Response(serialize.data)
 
     except Exception as e:
-        message = {'details': str(e)}
-        print(e)
-        return Response(message, status=status.HTTP_400_BAD_REQUEST)
+        return Response({'detail': str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
 
 class ActivateAccountView(View):
@@ -174,4 +147,25 @@ def reset_password(request, uidb64, token):
 def getUserProfile(request):
     user = request.user
     serializer = UserSerializer(user, many=False)
+    return Response(serializer.data)
+
+
+
+
+
+
+@api_view(['GET'])
+def getHotels(request):
+    hotels = Hotel.objects.all()
+    serializer = HotelSerializer(hotels, many=True)
+
+    print(serializer.data)
+
+    return Response(serializer.data)
+
+@api_view(['GET'])
+def getHotel(request, pk):
+    hotel = Hotel.objects.get(id=pk)
+    serializer = HotelSerializer(hotel, many=False)
+
     return Response(serializer.data)
