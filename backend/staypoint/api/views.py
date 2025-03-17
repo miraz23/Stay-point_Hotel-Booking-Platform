@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from rest_framework.response import Response
 from rest_framework.decorators import api_view, permission_classes
-from .models import Hotel
+from .models import UserDetails, Hotel
 from .serializers import HotelSerializer, UserSerializer
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework_simplejwt.views import TokenObtainPairView
@@ -146,8 +146,27 @@ def reset_password(request, uidb64, token):
 @permission_classes([IsAuthenticated])
 def getUserProfile(request):
     user = request.user
-    serializer = UserSerializer(user, many=False)
-    return Response(serializer.data)
+
+    try:
+        user_details = user.profile
+    except UserDetails.DoesNotExist:
+        return Response({"error": "User details not found"}, status=404)
+
+    data = {
+        "id": user.id,
+        "username": user.username,
+        "email": user.email,
+        "first_name": user.first_name,  # Add first name
+        "last_name": user.last_name,    # Add last name
+        "name": f"{user.first_name} {user.last_name}".strip() or "Set Your Name",  # Construct name
+        "contact_no": user_details.contact_no,
+        "nid_number": user_details.nid_number,  # Ensure nid_number is included
+        "address": user_details.address,
+        "image": request.build_absolute_uri(user_details.image.url) if user_details.image else None
+    }
+    
+    return Response(data)
+
 
 
 

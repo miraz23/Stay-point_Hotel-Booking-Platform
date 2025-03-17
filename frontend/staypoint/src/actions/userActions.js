@@ -13,7 +13,10 @@ import {
     USER_FORGOT_PASSWORD_FAIL,
     USER_RESET_PASSWORD_REQUEST, 
     USER_RESET_PASSWORD_SUCCESS, 
-    USER_RESET_PASSWORD_FAIL 
+    USER_RESET_PASSWORD_FAIL,
+    USER_PROFILE_REQUEST, 
+    USER_PROFILE_SUCCESS, 
+    USER_PROFILE_FAIL 
 } from "../constants/userConstants";
 
 export const signin = (formData) => async (dispatch) => {
@@ -115,4 +118,32 @@ export const resetPassword = (uid, token, password) => async (dispatch) => {
     dispatch({ type: USER_RESET_PASSWORD_FAIL });
     toast.error(error.response?.data?.error || "Something went wrong.");
   }
+};
+
+export const getUserProfile = () => async (dispatch, getState) => {
+    try {
+        dispatch({ type: USER_PROFILE_REQUEST });
+
+        const { userLogin: { userInfo } } = getState();
+
+        const config = {
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${userInfo.token}`,
+            },
+        };
+
+        const { data } = await axios.get("/api/users/profile/", config);
+
+        dispatch({ type: USER_PROFILE_SUCCESS, payload: data });
+
+    } catch (error) {
+        dispatch({ type: USER_PROFILE_FAIL });
+
+        const errorMessage = error.response && error.response.data.detail
+            ? error.response.data.detail
+            : "Failed to fetch user profile.";
+
+        toast.error(errorMessage);
+    }
 };
