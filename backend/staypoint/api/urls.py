@@ -8,6 +8,7 @@ urlpatterns = [
     path('users/forgot-password/', views.forgot_password, name="forgot-password"),
     path('users/reset-password/<uidb64>/<token>/', views.reset_password, name="reset-password"),
     path('users/profile/', views.getUserProfile, name="getUserProfile"),
+    path('users/update-profile/', views.updateUserProfile, name="update-user-profile"),
 
     path('hotels/', views.getHotels,name="getHotels"),
     path('hotels/<int:pk>/', views.getHotel,name="getHotel"),

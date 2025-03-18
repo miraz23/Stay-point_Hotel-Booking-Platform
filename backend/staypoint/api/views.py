@@ -150,6 +150,34 @@ def getUserProfile(request):
     serializer = UserSerializer(user, context={'request': request})  # Pass request for absolute image URL
     return Response(serializer.data, status=status.HTTP_200_OK)
 
+@api_view(['PUT'])
+@permission_classes([IsAuthenticated])
+def updateUserProfile(request):
+    user = request.user
+    data = request.data
+    image = request.FILES.get('image')
+
+    try:
+        user.first_name = data.get('fname', user.first_name)
+        user.last_name = data.get('lname', user.last_name)
+        user.email = data.get('email', user.email)
+        if data.get('password'):
+            user.set_password(data['password'])
+
+        profile = user.profile
+        profile.contact_no = data.get('contactNo', profile.contact_no)
+        profile.nid_number = data.get('nid', profile.nid_number)
+        profile.address = data.get('address', profile.address)
+        if image:
+            profile.image = image
+
+        user.save()
+        profile.save()
+
+        return Response(UserSerializer(user, context={'request': request}).data, status=status.HTTP_200_OK)
+
+    except Exception as e:
+        return Response({'detail': str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
 # Hotel functionality
 @api_view(['GET'])
