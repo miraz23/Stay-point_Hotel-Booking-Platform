@@ -27,7 +27,11 @@ const Hotel = () => {
             ) : (
                 <div className='w-full flex items-center gap-x-20'>
                     <div className='w-1/2 aspect-[3/2]'>
-                        <img src={`http://127.0.0.1:8000/${hotel.image}`} alt={hotel.name} className="w-full h-full object-cover rounded-lg" />
+                        {hotel.image ? (
+                            <img src={`http://127.0.0.1:8000/${hotel.image}`} alt={hotel.name} className="w-full h-full object-cover rounded-lg" />
+                        ) : (
+                            <img src="/default-hotel.jpg" alt={hotel.name} className="w-full h-full object-cover rounded-lg" />
+                        )}
                     </div>
                     <div className='w-1/2 text-left p-2'>
                         <div>

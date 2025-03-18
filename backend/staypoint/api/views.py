@@ -195,3 +195,25 @@ def getHotel(request, pk):
     serializer = HotelSerializer(hotel, many=False)
 
     return Response(serializer.data)
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def addHotel(request):
+    data = request.data
+    image = request.FILES.get('image')
+
+    try:
+        hotel = Hotel.objects.create(
+            user=request.user,
+            name=data['name'],
+            description=data['description'],
+            location=data['location'],
+            rating=data.get('rating', 0),
+            image=image
+        )
+
+        serializer = HotelSerializer(hotel, many=False)
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+    except Exception as e:
+        return Response({'detail': str(e)}, status=status.HTTP_400_BAD_REQUEST)
