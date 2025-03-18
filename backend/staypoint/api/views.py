@@ -5,7 +5,7 @@ from .models import UserDetails, Hotel
 from .serializers import HotelSerializer, UserSerializer
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework_simplejwt.views import TokenObtainPairView
-from .serializers import UserSerializerWithToken
+from .serializers import UserSerializer
 from django.contrib.auth.models import User
 from rest_framework.permissions import IsAuthenticated, IsAdminUser
 from django.utils.encoding import force_bytes, force_str
@@ -33,7 +33,7 @@ class EmailThread(threading.Thread):
 class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
     def validate(self, attrs):
         data = super().validate(attrs)
-        serializer=UserSerializerWithToken(self.user).data
+        serializer=UserSerializer(self.user).data
         for k,v in serializer.items():
             data[k]=v       
         return data
@@ -82,7 +82,7 @@ def signin(request):
         email_message = EmailMessage(email_subject, message, settings.EMAIL_HOST_USER, [data['email']])
         EmailThread(email_message).start()
 
-        serialize = UserSerializerWithToken(user, many=False)
+        serialize = UserSerializer(user, many=False)
         return Response(serialize.data)
 
     except Exception as e:
@@ -147,32 +147,11 @@ def reset_password(request, uidb64, token):
 def getUserProfile(request):
     user = request.user
 
-    try:
-        user_details = user.profile
-    except UserDetails.DoesNotExist:
-        return Response({"error": "User details not found"}, status=404)
-
-    data = {
-        "id": user.id,
-        "username": user.username,
-        "email": user.email,
-        "first_name": user.first_name,  # Add first name
-        "last_name": user.last_name,    # Add last name
-        "name": f"{user.first_name} {user.last_name}".strip() or "Set Your Name",  # Construct name
-        "contact_no": user_details.contact_no,
-        "nid_number": user_details.nid_number,  # Ensure nid_number is included
-        "address": user_details.address,
-        "image": request.build_absolute_uri(user_details.image.url) if user_details.image else None
-    }
-    
-    return Response(data)
+    serializer = UserSerializer(user, context={'request': request})  # Pass request for absolute image URL
+    return Response(serializer.data, status=status.HTTP_200_OK)
 
 
-
-
-
-
-
+# Hotel functionality
 @api_view(['GET'])
 def getHotels(request):
     hotels = Hotel.objects.all()
