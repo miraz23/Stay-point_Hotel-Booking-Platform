@@ -5,6 +5,7 @@ import { toast } from "react-hot-toast";
 import { IconEdit, IconCheck, IconX, IconMapPinPlus } from '@tabler/icons-react';
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useNavigate } from 'react-router-dom';
 
 const schemaDetails = z.object({
   fname: z.string().min(2, "First name must be at least 2 characters"),
@@ -14,15 +15,8 @@ const schemaDetails = z.object({
   nid: z.string().min(10, "NID must be 10 characters"),
 });
 
-const schemaHotel = z.object({
-  name: z.string().min(3, "Hotel name is required"),
-  description: z.string().min(5, "Description must be at least 5 characters"),
-  location: z.string().min(3, "Location is required"),
-  rating: z.string().min(1, "Rating must be between 1 and 5").max(5, "Rating must be between 1 and 5"),
-  image: z.any().optional(),
-});
-
 export default function UserProfile() {
+  const navigate = useNavigate();
   const [user, setUser] = useState(null);
   const [isEditing, setIsEditing] = useState(false);
   const [formData, setFormData] = useState({
@@ -35,15 +29,6 @@ export default function UserProfile() {
     image: null
   });
 
-  const [showHotelForm, setShowHotelForm] = useState(false);
-  const [hotelData, setHotelData] = useState({
-    name: "",
-    description: "",
-    location: "",
-    rating: "",
-    image: null,
-  });
-
   const token = localStorage.getItem('token');
 
   const {
@@ -52,13 +37,6 @@ export default function UserProfile() {
     formState: { errors: errorsUpdate },
     reset: resetDetails,
   } = useForm({ resolver: zodResolver(schemaDetails) });
-
-  const {
-    register: registerHotel,
-    handleSubmit: handleSubmitHotel,
-    formState: { errors: errorsHotel },
-    reset: resetHotel,
-  } = useForm({ resolver: zodResolver(schemaHotel) });
 
   // Fetch user details
 
@@ -135,51 +113,6 @@ export default function UserProfile() {
     }
   };
 
-
-  // List hotel
-
-  const handleHotelChange = (e) => {
-    const { name, value } = e.target;
-    setHotelData((prevState) => ({ ...prevState, [name]: value }));
-  };
-
-  const handleHotelFileChange = (e) => {
-    setHotelData((prevState) => ({ ...prevState, image: e.target.files[0] }));
-  };
-
-  const handleListHotel = async () => {
-    const newHotel = new FormData();
-    newHotel.append("name", hotelData.name);
-    newHotel.append("description", hotelData.description);
-    newHotel.append("location", hotelData.location);
-    newHotel.append("rating", hotelData.rating);
-
-    if (hotelData.image) {
-      newHotel.append("image", hotelData.image);
-    }
-
-    try {
-      await axios.post("http://127.0.0.1:8000/api/hotels/add-hotel/", newHotel, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "multipart/form-data",
-        },
-      });
-      toast.success("Hotel listed successfully!");
-      setShowHotelForm(false);
-      resetHotel();
-      setHotelData({
-        name: "",
-        description: "",
-        location: "",
-        rating: "",
-        image: null,
-      });
-    } catch (error) {
-      toast.error("Error listing hotel.");
-    }
-  };
-
   return (
     <div className="mx-10 my-30 p-6 bg-white shadow-lg rounded-lg">
       {user ? (
@@ -247,49 +180,13 @@ export default function UserProfile() {
               </div>
             )}
             
-            <button onClick={() => setShowHotelForm(true)} className="flex items-center justify-center px-4 py-2 bg-cyan-500 text-white  font-semibold rounded-lg shadow-md hover:opacity-90 transition cursor-pointer">
-              <IconMapPinPlus className='mr-1' /> List your hotel
+            <button onClick={() => navigate('/list-hotel')} className="flex items-center justify-center px-4 py-2 bg-cyan-500 text-white font-semibold rounded-lg shadow-md hover:opacity-90 transition cursor-pointer">
+              <IconMapPinPlus className="mr-1" /> List your hotel
             </button>
           </div>
         </div>
       ) : (
         <p className="text-gray-600 text-center">User details not found.</p>
-      )}
-      {showHotelForm && (
-        <div className="fixed inset-0 backdrop-blur-xs flex justify-center items-center">
-          <div className="bg-white p-5 mt-20 rounded-md shadow-lg">
-            <form className="space-y-2">
-              <div>
-                <input {...registerHotel("name")} className="block w-full rounded-lg border border-gray-300 px-4 py-2" type="text" name="name" placeholder="Hotel Name" value={hotelData.name} onChange={handleHotelChange}/>
-                {errorsHotel.name && <p className="text-red-500">{errorsHotel.name.message}</p>}
-              </div>
-              <div>
-                <textarea {...registerHotel("description")} className="block w-full rounded-lg border border-gray-300 px-4 py-2" name="description" placeholder="Hotel Description" value={hotelData.description} onChange={handleHotelChange}/>
-                {errorsHotel.description && <p className="text-red-500">{errorsHotel.description.message}</p>}
-              </div>
-              <div>
-                <input {...registerHotel("location")} className="block w-full rounded-lg border border-gray-300 px-4 py-2" type="text" name="location" placeholder="Hotel Location" value={hotelData.location} onChange={handleHotelChange}/>
-                {errorsHotel.location && <p className="text-red-500">{errorsHotel.location.message}</p>}
-              </div>
-              <div>
-                <input {...registerHotel("rating")} className="block w-full rounded-lg border border-gray-300 px-4 py-2" type="number" name="rating" placeholder="Hotel Rating" value={hotelData.rating} onChange={handleHotelChange}/>
-                {errorsHotel.rating && <p className="text-red-500">{errorsHotel.rating.message}</p>}
-              </div>
-              <div>
-                <input {...registerHotel("image")} className="block w-full rounded-lg border border-gray-300 px-4 py-2" type="file" accept="image/*" onChange={handleHotelFileChange} />
-              </div>
-
-              <div className="flex gap-2 mt-4">
-                <button onClick={handleSubmitHotel(handleListHotel)} className="px-4 py-2 bg-green-500 text-white font-semibold rounded-lg shadow-md hover:opacity-90 transition">
-                  Submit
-                </button>
-                <button onClick={() => setShowHotelForm(false)} className="px-4 py-2 bg-red-500 text-white font-semibold rounded-lg shadow-md hover:opacity-90 transition">
-                  Cancel
-                </button>
-              </div>
-            </form>
-          </div>
-        </div>
       )}
     </div>
   );
