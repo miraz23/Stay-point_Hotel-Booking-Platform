@@ -10,7 +10,7 @@ const schemaDetails = z.object({
   fname: z.string().min(2, "First name must be at least 2 characters"),
   lname: z.string().min(2, "Last name must be at least 2 characters"),
   contactNo: z.string().min(11, "Contact number must be 11 digits"),
-  address: z.string().min(3, "Present address is required"),
+  address: z.string().min(3, "Address is required"),
   nid: z.string().min(10, "NID must be 10 characters"),
 });
 
@@ -199,7 +199,7 @@ export default function UserProfile() {
                 <p className="text-gray-600"><strong>NID:</strong> {user.nid_number || "N/A"}</p>
               </div>
             ) : (
-              <div className='text-center space-y-2 sm:text-left'>
+              <div className='text-center space-y-2 sm:text-left w-2/3'>
                 <div className="flex gap-5">
                   <div>
                     <input {...registerDetails("fname")} className="block w-full rounded-lg border border-gray-300 px-4 py-2" type="text" name="fname" value={formData.fname} onChange={handleDetailsChange} />
@@ -215,19 +215,17 @@ export default function UserProfile() {
                     <input {...registerDetails("contactNo")} className="block w-full rounded-lg border border-gray-300 px-4 py-2" type="text" name="contactNo" value={formData.contactNo} onChange={handleDetailsChange} />
                     {errorsUpdate.contactNo && <p className="text-red-500">{errorsUpdate.contactNo.message}</p>}
                   </div>  
-                  <div>  
-                    <input {...registerDetails("address")} className="block w-full rounded-lg border border-gray-300 px-4 py-2" type="text" name="address" value={formData.address} onChange={handleDetailsChange} />
-                    {errorsUpdate.address && <p className="text-red-500">{errorsUpdate.address.message}</p>}
-                  </div>  
-                </div>
-                <div className="flex gap-5">  
-                  <div> 
+                  <div>
                     <input {...registerDetails("nid")} className="block w-full rounded-lg border border-gray-300 px-4 py-2" type="text" name="nid" value={formData.nid} onChange={handleDetailsChange} />
                     {errorsUpdate.nid && <p className="text-red-500">{errorsUpdate.nid.message}</p>}
                   </div>  
-                  <div>  
-                    <input {...registerDetails("image")} className="block w-full rounded-lg border border-gray-300 px-4 py-2" type="file" accept="image/*" onChange={handleDetailsFileChange} />
-                  </div>  
+                </div>
+                <div> 
+                  <textarea {...registerDetails("address")} rows={2} className="block w-full rounded-lg border border-gray-300 px-4 py-2" type="text" name="address" value={formData.address} onChange={handleDetailsChange} />
+                  {errorsUpdate.address && <p className="text-red-500">{errorsUpdate.address.message}</p>}
+                </div>  
+                <div>  
+                  <input {...registerDetails("image")} className="block w-full rounded-lg border border-gray-300 px-4 py-2" type="file" accept="image/*" onChange={handleDetailsFileChange} />
                 </div>
               </div>
             )}
@@ -259,7 +257,7 @@ export default function UserProfile() {
       )}
       {showHotelForm && (
         <div className="fixed inset-0 backdrop-blur-xs flex justify-center items-center">
-          <div className="bg-white p-6 rounded-lg shadow-lg">
+          <div className="bg-white p-6 mt-15 rounded-lg shadow-lg">
             <h2 className="text-xl font-bold mb-4">List Your Hotel</h2>
             <form className="space-y-2">
               <div>
@@ -271,11 +269,11 @@ export default function UserProfile() {
                 {errorsHotel.description && <p className="text-red-500">{errorsHotel.description.message}</p>}
               </div>
               <div>
-                <input {...registerHotel("location")} className="block w-full rounded-lg border border-gray-300 px-4 py-2" type="text" name="location" placeholder="Location" value={hotelData.location} onChange={handleHotelChange}/>
+                <input {...registerHotel("location")} className="block w-full rounded-lg border border-gray-300 px-4 py-2" type="text" name="location" placeholder="Hotel Location" value={hotelData.location} onChange={handleHotelChange}/>
                 {errorsHotel.location && <p className="text-red-500">{errorsHotel.location.message}</p>}
               </div>
               <div>
-                <input {...registerHotel("rating")} className="block w-full rounded-lg border border-gray-300 px-4 py-2" type="number" name="rating" placeholder="Rating (1-5)" value={hotelData.rating} onChange={handleHotelChange}/>
+                <input {...registerHotel("rating")} className="block w-full rounded-lg border border-gray-300 px-4 py-2" type="number" name="rating" placeholder="Hotel Rating" value={hotelData.rating} onChange={handleHotelChange}/>
                 {errorsHotel.rating && <p className="text-red-500">{errorsHotel.rating.message}</p>}
               </div>
               <div>

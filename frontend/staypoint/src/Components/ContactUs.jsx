@@ -18,21 +18,21 @@ const ContactUs = () => {
         <div className="w-full lg:w-1/3 px-4 mb-8 lg:mb-0">
           <div>
             <div className="flex mb-6">
-              <i className="bi bi-geo-alt text-2xl text-gray-700 bg-cyan-500 hover:bg-cyan-600 hover:text-gray-800 transition-colors flex justify-center items-center w-[55px] h-[55px] rounded-[40px]"></i>
+              <i className="bi bi-geo-alt text-2xl text-white bg-cyan-500 flex justify-center items-center w-[55px] h-[55px] rounded-[40px]"></i>
               <div className='ml-5'>
                 <h4 className="text-xl text-gray-700 font-semibold">Location:</h4>
                 <p>Agrabad, Chattogram</p>
               </div>
             </div>
             <div className="flex mb-6">
-              <i className="bi bi-envelope text-2xl text-gray-700 bg-cyan-500 hover:bg-cyan-600 hover:text-gray-800 transition-colors flex justify-center items-center w-[55px] h-[55px] rounded-[40px]"></i>
+              <i className="bi bi-envelope text-2xl text-white bg-cyan-500 flex justify-center items-center w-[55px] h-[55px] rounded-[40px]"></i>
               <div className='ml-5'>
                 <h4 className="text-xl text-gray-700 font-semibold">Email:</h4>
                 <p>staypoint@gmail.com</p>
               </div>
             </div>
             <div className='flex'>
-              <i className="bi bi-phone text-2xl text-gray-700 bg-cyan-500 hover:bg-cyan-600 hover:text-gray-800 transition-colors flex justify-center items-center w-[55px] h-[55px] rounded-[40px]"></i>
+              <i className="bi bi-phone text-2xl text-white bg-cyan-500 flex justify-center items-center w-[55px] h-[55px] rounded-[40px]"></i>
               <div className='ml-5'>
                 <h4 className="text-xl text-gray-700 font-semibold">Call:</h4>
                 <p>+880 1812345678</p>
@@ -55,11 +55,11 @@ const ContactUs = () => {
               <label className="block text-sm font-medium text-gray-700">Subject</label>
               <input type="text" id="contact-subject" name="contact-subject" className="mt-1 block w-full p-3 border border-gray-300 rounded-md" required />
             </div>
-            <div className="mb-4">
+            <div className="mb-6">
               <label className="block text-sm font-medium text-gray-700">Message</label>
               <textarea id="contact-message" name="contact-message" className="mt-1 block w-full p-3 border border-gray-300 rounded-md" required></textarea>
             </div>
-            <button className="bg-gradient-to-r from-cyan-800 to-cyan-500 cursor-pointer text-white text-sm transition-all duration-500 ease-in-out hover:opacity-90 px-3 py-2 rounded-lg uppercase">
+            <button className="flex items-center justify-center px-4 py-2 bg-cyan-500 text-white  font-semibold rounded-lg shadow-md hover:opacity-90 transition cursor-pointer">
               Submit
             </button>
           </form>
