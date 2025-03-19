@@ -2,7 +2,7 @@ import React from 'react';
 
 const ContactUs = () => {
   return (
-    <div className="my-25 mx-10">
+    <div className="my-30 mx-10">
       <div className="mb-8">
         <iframe
           src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d59063.28067829215!2d91.7897216!3d22.298624!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x30acd9fbcf03a9d5%3A0x505e915314ec7eff!2sAgrabad%2CChattogram!5e0!3m2!1sen!2sbd!4v1739894761129!5m2!1sen!2sbd"

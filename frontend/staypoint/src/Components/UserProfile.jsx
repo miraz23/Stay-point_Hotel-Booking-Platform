@@ -181,7 +181,7 @@ export default function UserProfile() {
   };
 
   return (
-    <div className="mx-10 my-25 p-6 bg-white shadow-lg rounded-lg">
+    <div className="mx-10 my-30 p-6 bg-white shadow-lg rounded-lg">
       {user ? (
         <div className="flex justify-between flex-col md:flex-row items-center">
           <form className="flex flex-col sm:flex-row items-center px-5 gap-6">
@@ -257,8 +257,7 @@ export default function UserProfile() {
       )}
       {showHotelForm && (
         <div className="fixed inset-0 backdrop-blur-xs flex justify-center items-center">
-          <div className="bg-white p-6 mt-15 rounded-lg shadow-lg">
-            <h2 className="text-xl font-bold mb-4">List Your Hotel</h2>
+          <div className="bg-white p-5 mt-20 rounded-md shadow-lg">
             <form className="space-y-2">
               <div>
                 <input {...registerHotel("name")} className="block w-full rounded-lg border border-gray-300 px-4 py-2" type="text" name="name" placeholder="Hotel Name" value={hotelData.name} onChange={handleHotelChange}/>

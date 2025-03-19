@@ -29,11 +29,11 @@ const Header = () => {
 
   return (
     <header className="flex justify-center">
-      <div className="absolute top-0 w-[94%] bg-[#fff] font-medium shadow-md rounded-2xl my-2 z-50">
+      <div className="absolute top-0 w-[95%] bg-[#fff] font-medium shadow-md rounded-2xl my-5 z-50">
         <div className="flex items-center justify-between py-3 px-5">
           <div className="flex items-center">
             <Link to="/">  
-              <h1 className="text-[27px] ml-2 cursor-pointer bg-gradient-to-r from-cyan-800 to-cyan-500 text-transparent bg-clip-text" style={{ fontFamily: "Gochi Hand, cursive" }}>
+              <h1 className="text-[25px] cursor-pointer bg-gradient-to-r from-cyan-800 to-cyan-500 text-transparent bg-clip-text mt-2" style={{ fontFamily: "Gochi Hand, cursive" }}>
                 STAY POINT
               </h1>
             </Link>

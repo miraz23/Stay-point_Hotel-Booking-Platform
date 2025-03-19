@@ -67,7 +67,7 @@ function AboutUs() {
   };
 
   return (
-    <div className='flex gap-10 my-25 mx-10'>
+    <div className='flex gap-10 my-30 mx-10'>
       <div className='w-1/6'>
         <ul>
           <li

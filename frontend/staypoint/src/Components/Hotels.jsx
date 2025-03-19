@@ -17,9 +17,9 @@ const Hotels = () => {
     }, []);
 
     return (
-        <div className="text-center my-25 mx-10">
-            <h1 className="text-5xl font-bold text-gray-800 p-4">Featured Hotels</h1>
-            <p className="text-lg my-4 text-gray-600">Explore hundreds of hotels opportunities with all the information you need.</p>
+        <div className="text-center my-30 mx-10">
+            <h1 className="text-4xl font-bold text-gray-800 p-2">Our <span className='text-cyan-500'>Hotels</span></h1>
+            <p className="text-lg my-1 text-gray-600">Explore hundreds of hotels opportunities with all the information you need.</p>
             
             <div className="w-full flex flex-wrap gap-4 mt-10">
                 {
