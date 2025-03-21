@@ -31,12 +31,15 @@ def save_user_profile(sender, instance, **kwargs):
 
 
 class Hotel(models.Model):
-    user=models.ForeignKey(User,on_delete=models.SET_NULL,null=True)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
     name = models.CharField(max_length=255)
     description = models.TextField()
     location = models.CharField(max_length=255)
     rating = models.FloatField()
-    image=models.ImageField(upload_to='hotel_images/', null=True,blank=True)
+    image = models.ImageField(upload_to='hotels/', null=True, blank=True)
+    check_in_time = models.TimeField(default="12:00")
+    check_out_time = models.TimeField(default="10:00")
+    amenities = models.JSONField(default=list)
     
     def __str__(self):
         return self.name

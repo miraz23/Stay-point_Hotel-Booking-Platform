@@ -18,7 +18,7 @@ from .utils import generate_token
 from django.conf import settings
 from rest_framework import status
 from django.views import View
-import threading
+import threading, json
 
 # Create your views here.
 
@@ -203,13 +203,18 @@ def addHotel(request):
     image = request.FILES.get('image')
 
     try:
+        amenities = json.loads(data.get('amenities', '[]'))
+
         hotel = Hotel.objects.create(
             user=request.user,
             name=data['name'],
             description=data['description'],
             location=data['location'],
             rating=data.get('rating', 0),
-            image=image
+            image=image,
+            check_in_time=data.get('checkIn', '12:00'),
+            check_out_time=data.get('checkOut', '10:00'),
+            amenities=amenities,
         )
 
         serializer = HotelSerializer(hotel, many=False)

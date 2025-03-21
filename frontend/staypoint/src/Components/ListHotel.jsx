@@ -4,6 +4,7 @@ import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import axios from 'axios';
 import { toast } from 'react-hot-toast';
+import { useNavigate } from 'react-router-dom';
 
 const schemaHotel = z.object({
     name: z.string().min(3, 'Hotel name must be at least 3 characters'),
@@ -18,6 +19,7 @@ const schemaHotel = z.object({
 
 export default function ListHotel() {
   const token = localStorage.getItem('token');
+  const navigate = useNavigate();
 
   const {
     register,
@@ -47,28 +49,34 @@ export default function ListHotel() {
   const onSubmit = async (data) => {
     const formData = new FormData();
     Object.keys(data).forEach((key) => {
-      if (key === 'image' && data[key]) {
-        formData.append(key, data[key]);
-      } else if (key === 'amenities') {
-        data[key].forEach((item) => formData.append('amenities', item));
-      } else {
-        formData.append(key, data[key]);
-      }
+        if (key === 'image' && data[key]) {
+            formData.append(key, data[key]);
+        } else if (key === 'amenities') {
+          formData.append('amenities', JSON.stringify(data.amenities));
+        } else {
+            formData.append(key, data[key]);
+        }
     });
 
     try {
-      await axios.post('http://127.0.0.1:8000/api/hotels/add-hotel/', formData, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-          'Content-Type': 'multipart/form-data',
-        },
-      });
-      toast.success('Hotel listed successfully!');
-      reset();
+        await axios.post('http://127.0.0.1:8000/api/hotels/add-hotel/', formData, {
+            headers: {
+                Authorization: `Bearer ${token}`,
+                'Content-Type': 'multipart/form-data',
+            },
+        });
+        toast.success('Hotel listed successfully!');
+        reset();
+        if (token) {
+            navigate('/auth/profile');
+        } else {
+            toast.error('You must be logged in to add a hotel.');
+        }
     } catch (error) {
-      toast.error('Error listing hotel.');
+        toast.error('Error listing hotel.');
     }
   };
+
 
   return (
     <div className="flex items-center justify-center p-8 my-20">

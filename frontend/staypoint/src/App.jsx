@@ -12,7 +12,7 @@ import Signin from './components/Signin';
 import ForgotPassword from './components/ForgotPassword';
 import ResetPassword from './components/ResetPassword';
 import UserProfile from './components/UserProfile';
-import ListHotel from './pages/ListHotel';
+import ListHotel from './components/ListHotel';
 import { Toaster } from "react-hot-toast";
 
 const Layout = ({ children }) => {
