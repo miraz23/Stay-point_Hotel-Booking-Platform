@@ -27,7 +27,7 @@ const FeaturedHotels = () => {
           ) : error ? (
               <Message variant='danger'>{error}</Message>
           ) : featuredHotels.length === 0 ? (
-              <p className="text-lg text-gray-600">No featured hotels available.</p>
+              <p className="w-full text-lg text-gray-600 text-center italic">No featured hotels available.</p>
           ) : (
                 featuredHotels.map((hotel) => (
                     <div className="w-full md:w-[calc(50%-12px)] lg:w-[calc(33.33%-12px)] flex flex-col border-2 border-[#fff] rounded-xl p-4 bg-white shadow-2xl" key={hotel.id}>
