@@ -10,8 +10,6 @@ import { useDispatch, useSelector } from 'react-redux';
 import { listHotels } from '../actions/hotelActions';
 import { MapPinIcon, StarIcon } from '@heroicons/react/24/solid';
 import { Link } from 'react-router-dom';
-import Loader from './Loader';
-import Message from './Message';
 
 const schemaDetails = z.object({
   fname: z.string().min(2, "First name must be at least 2 characters"),
@@ -106,12 +104,13 @@ export default function UserProfile() {
     }
 
     try {
-      await axios.put('http://127.0.0.1:8000/api/users/update-profile/', updatedData, {
+      const response = await axios.put('http://127.0.0.1:8000/api/users/update-profile/', updatedData, {
         headers: {
           Authorization: `Bearer ${token}`,
           'Content-Type': 'multipart/form-data'
         },
       });
+      setUser(response.data);
       toast.success("Profile updated successfully!");
       setIsEditing(false);
     } catch (error) {
@@ -134,7 +133,7 @@ export default function UserProfile() {
         {user ? (
           <div className="flex justify-between flex-col md:flex-row items-center">
             <form className="flex flex-col sm:flex-row items-center gap-6">
-              {user.image ? (
+              {user.image && user.image !== "N/A" ? (
                 <img src={user.image} alt="Profile" className="w-32 h-32 border border-gray-300 rounded-full sm:rounded-none object-cover" />
               ) : (
                 <img src="/profile-user.png" alt="Default Profile" className="w-32 h-32 border border-gray-300 rounded-full sm:rounded-none object-cover" />
@@ -206,45 +205,47 @@ export default function UserProfile() {
         )}
       </div>
 
-      <div className='hotel pt-10'>
-        <h1 className='text-4xl text-gray-800 py-4'>Your <span className='text-cyan-600'>Listed Hotels</span></h1>
-        <div className="w-full flex flex-wrap gap-4">
-          {hotels
-              .filter(hotel => hotel.user === user?.id)
-              .map(hotel => (
-                <div className="w-full md:w-[calc(50%-12px)] lg:w-[calc(33.33%-12px)] flex flex-col border-2 border-[#fff] rounded-xl p-4 bg-white shadow-2xl" key={hotel.id}>
-                  <div className="flex flex-col justify-center items-center mb-4">
-                    <div className="aspect-[3/2] flex items-center justify-center rounded-xl">
-                      {hotel.image ? (
-                        <img className="w-full h-full object-cover rounded-xl" src={`http://127.0.0.1:8000${hotel.image}`} alt="Hotel Logo" />
-                      ) : (
-                        <img className="w-full h-full object-cover rounded-xl" src="/default-hotel.jpg" alt="Hotel Logo" />
-                      )}
+      {user?.is_host && (
+        <div className='pt-10'>
+          <h1 className='text-4xl text-gray-800 py-4'>Your <span className='text-cyan-600'>Listed Hotels</span></h1>
+          <div className="w-full flex flex-wrap gap-4">
+            {hotels
+                .filter(hotel => hotel.user === user?.id)
+                .map(hotel => (
+                  <div className="w-full md:w-[calc(50%-12px)] lg:w-[calc(33.33%-12px)] flex flex-col border-2 border-[#fff] rounded-xl p-4 bg-white shadow-2xl" key={hotel.id}>
+                    <div className="flex flex-col justify-center items-center mb-4">
+                      <div className="aspect-[3/2] flex items-center justify-center rounded-xl">
+                        {hotel.image ? (
+                          <img className="w-full h-full object-cover rounded-xl" src={`http://127.0.0.1:8000${hotel.image}`} alt="Hotel Logo" />
+                        ) : (
+                          <img className="w-full h-full object-cover rounded-xl" src="/default-hotel.jpg" alt="Hotel Logo" />
+                        )}
+                      </div>
+                      <div className="text-center pt-3">
+                        <h1 className="text-xl font-bold text-gray-800">{hotel.name}</h1>
+                      </div>
                     </div>
-                    <div className="text-center pt-3">
-                      <h1 className="text-xl font-bold text-gray-800">{hotel.name}</h1>
+                    <div className="flex justify-between mb-5">
+                      <div className="flex items-center">
+                        <MapPinIcon className="h-6 w-6 text-blue-500 mr-2" />
+                        <span className="text-gray-600">{hotel.location}</span>
+                      </div>
+                      <div className="flex items-center">
+                        <StarIcon className="h-5 w-5 text-yellow-500 mr-2" />
+                        <span className="text-gray-600 font-semibold">{hotel.rating}</span>
+                      </div>
                     </div>
+                    <Link to={`/hotels/${hotel.id}`}>
+                      <button className="w-full px-6 py-2 text-white text-md font-semibold rounded-lg shadow-md bg-cyan-500 hover:opacity-90 transition cursor-pointer">
+                        View Details
+                      </button>
+                    </Link>
                   </div>
-                  <div className="flex justify-between mb-5">
-                    <div className="flex items-center">
-                      <MapPinIcon className="h-6 w-6 text-blue-500 mr-2" />
-                      <span className="text-gray-600">{hotel.location}</span>
-                    </div>
-                    <div className="flex items-center">
-                      <StarIcon className="h-5 w-5 text-yellow-500 mr-2" />
-                      <span className="text-gray-600 font-semibold">{hotel.rating}</span>
-                    </div>
-                  </div>
-                  <Link to={`/hotels/${hotel.id}`}>
-                    <button className="w-full px-6 py-2 text-white text-md font-semibold rounded-lg shadow-md bg-cyan-500 hover:opacity-90 transition cursor-pointer">
-                      View Details
-                    </button>
-                  </Link>
-                </div>
-              ))
-          }
+                ))
+            }
+          </div>
         </div>
-      </div>
+      )}
 
     </div>
   );

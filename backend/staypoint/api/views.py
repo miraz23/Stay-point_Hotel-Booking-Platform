@@ -7,7 +7,7 @@ from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework_simplejwt.views import TokenObtainPairView
 from .serializers import UserSerializer
 from django.contrib.auth.models import User
-from rest_framework.permissions import IsAuthenticated, IsAdminUser
+from rest_framework.permissions import IsAuthenticated
 from django.utils.encoding import force_bytes, force_str
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.contrib.auth.tokens import default_token_generator
@@ -147,7 +147,7 @@ def reset_password(request, uidb64, token):
 def getUserProfile(request):
     user = request.user
 
-    serializer = UserSerializer(user, context={'request': request})  # Pass request for absolute image URL
+    serializer = UserSerializer(user, context={'request': request})
     return Response(serializer.data, status=status.HTTP_200_OK)
 
 @api_view(['PUT'])
@@ -185,8 +185,6 @@ def getHotels(request):
     hotels = Hotel.objects.all()
     serializer = HotelSerializer(hotels, many=True)
 
-    print(serializer.data)
-
     return Response(serializer.data)
 
 @api_view(['GET'])
@@ -216,6 +214,9 @@ def addHotel(request):
             check_out_time=data.get('checkOut', '10:00'),
             amenities=amenities,
         )
+
+        request.user.profile.is_host = True
+        request.user.profile.save()
 
         serializer = HotelSerializer(hotel, many=False)
         return Response(serializer.data, status=status.HTTP_201_CREATED)

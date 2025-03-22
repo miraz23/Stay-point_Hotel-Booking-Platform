@@ -10,6 +10,7 @@ class UserDetails(models.Model):
     contact_no = models.CharField(max_length=11)
     nid_number = models.CharField(max_length=10)
     address = models.TextField()
+    is_host = models.BooleanField(default=False)
     image = models.ImageField(upload_to='profile_images/', blank=True, null=True)
 
     class Meta:

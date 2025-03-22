@@ -14,12 +14,12 @@ class UserSerializer(serializers.ModelSerializer):
     nid_number = serializers.SerializerMethodField()
     address = serializers.SerializerMethodField()
     image = serializers.SerializerMethodField()
-    isAdmin = serializers.SerializerMethodField(read_only=True)
+    is_host = serializers.SerializerMethodField(read_only=True)
     token = serializers.SerializerMethodField(read_only=True)
 
     class Meta:
         model = User
-        fields = ['id', 'username', 'email', 'name', 'contact_no', 'address', 'nid_number', 'image', 'isAdmin', 'token']
+        fields = ['id', 'username', 'email', 'name', 'contact_no', 'address', 'nid_number', 'image', 'is_host', 'token']
 
     def get_name(self, obj):
         firstname = obj.first_name
@@ -46,8 +46,10 @@ class UserSerializer(serializers.ModelSerializer):
             return request.build_absolute_uri(profile.image.url) if request else profile.image.url
         return "N/A"
     
-    def get_isAdmin(self, obj):
-        return obj.is_staff
+    def get_is_host(self, obj):
+        profile = getattr(obj, 'profile', None)
+        return profile.is_host if profile else False
+
     
     def get_token(self, obj):
         token = RefreshToken.for_user(obj)
