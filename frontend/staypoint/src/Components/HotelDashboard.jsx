@@ -5,8 +5,10 @@ import { listHotelDetails } from '../actions/hotelActions';
 import Loader from './Loader';
 import Message from './Message';
 import { MapPinIcon, StarIcon } from '@heroicons/react/24/solid';
+import { IconEdit } from '@tabler/icons-react';
+import { Link } from 'react-router-dom';
 
-const Hotel = () => {
+const HotelDashboard = () => {
     const { id } = useParams();
     const dispatch = useDispatch();
 
@@ -34,18 +36,25 @@ const Hotel = () => {
                         )}
                     </div>
                     <div className='w-1/2 text-left p-2'>
-                        <div>
-                          <div className='flex items-center'>
-                            <h1 className='text-4xl font-semibold'>{hotel.name}</h1>
-                            <div className="flex items-center mx-2">
-                              <StarIcon className="h-5 w-5 text-yellow-500 mr-2"/>
-                              <span className="text-gray-600 text-2xl font-semibold">{hotel.rating}</span>
+                        <div className='flex items-center justify-between'>
+                            <div>
+                                <div className='flex items-center'>
+                                  <h1 className='text-4xl font-semibold'>{hotel.name}</h1>
+                                  <div className="flex items-center mx-2">
+                                    <StarIcon className="h-5 w-5 text-yellow-500 mr-2"/>
+                                    <span className="text-gray-600 text-2xl font-semibold">{hotel.rating}</span>
+                                  </div>
+                                </div>
+                                <div className="flex items-center py-3">
+                                  <MapPinIcon className="h-6 w-6 text-blue-500 mr-2" />
+                                  <span className="text-gray-600">{hotel.location}</span>
+                                </div>
                             </div>
-                          </div>
-                          <div className="flex items-center py-3">
-                            <MapPinIcon className="h-6 w-6 text-blue-500 mr-2" />
-                            <span className="text-gray-600">{hotel.location}</span>
-                          </div>
+                            <Link>
+                              <button className="text-cyan-500 cursor-pointer hover:text-cyan-600 transition-colors p-2 rounded-md hover:bg-gray-100">
+                                  <IconEdit size={30}/>
+                              </button>
+                            </Link>
                         </div>
                         <p className='text-[16px]'>{hotel.description}</p>
                     </div>
@@ -55,4 +64,4 @@ const Hotel = () => {
     );
 };
 
-export default Hotel;
+export default HotelDashboard;

@@ -2,13 +2,12 @@ import React, { useEffect, useState } from 'react';
 import { useForm } from "react-hook-form";
 import axios from 'axios';
 import { toast } from "react-hot-toast";
-import { IconEdit, IconCheck, IconX, IconMapPinPlus } from '@tabler/icons-react';
+import { IconEdit, IconCheck, IconX, IconMapPinPlus, IconTrendingUp } from '@tabler/icons-react';
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { listHotels } from '../actions/hotelActions';
-import { MapPinIcon, StarIcon } from '@heroicons/react/24/solid';
 import { Link } from 'react-router-dom';
 
 const schemaDetails = z.object({
@@ -149,31 +148,33 @@ export default function UserProfile() {
               ) : (
                 <div className='text-center space-y-2 sm:text-left w-2/3'>
                   <div className="flex gap-5">
-                    <div>
-                      <input {...registerDetails("fname")} className="block w-full rounded-lg border border-gray-300 px-4 py-2" type="text" name="fname" value={formData.fname} onChange={handleDetailsChange} />
+                    <div className="w-1/2">
+                      <input {...registerDetails("fname")} className="block w-full rounded-lg border border-gray-300 px-4 py-1" type="text" name="fname" value={formData.fname} onChange={handleDetailsChange} />
                       {errorsUpdate.fname && <p className="text-red-500">{errorsUpdate.fname.message}</p>}
                     </div>
-                    <div>
-                      <input {...registerDetails("lname")} className="block w-full rounded-lg border border-gray-300 px-4 py-2" type="text" name="lname" value={formData.lname} onChange={handleDetailsChange} />
+                    <div className="w-1/2">
+                      <input {...registerDetails("lname")} className="block w-full rounded-lg border border-gray-300 px-4 py-1" type="text" name="lname" value={formData.lname} onChange={handleDetailsChange} />
                       {errorsUpdate.lname && <p className="text-red-500">{errorsUpdate.lname.message}</p>}
                     </div>
                   </div>
                   <div className="flex gap-5">
-                    <div>
-                      <input {...registerDetails("contactNo")} className="block w-full rounded-lg border border-gray-300 px-4 py-2" type="text" name="contactNo" value={formData.contactNo} onChange={handleDetailsChange} />
+                    <div className="w-1/2">
+                      <input {...registerDetails("contactNo")} className="block w-full rounded-lg border border-gray-300 px-4 py-1" type="text" name="contactNo" value={formData.contactNo} onChange={handleDetailsChange} />
                       {errorsUpdate.contactNo && <p className="text-red-500">{errorsUpdate.contactNo.message}</p>}
                     </div>  
-                    <div>
-                      <input {...registerDetails("nid")} className="block w-full rounded-lg border border-gray-300 px-4 py-2" type="text" name="nid" value={formData.nid} onChange={handleDetailsChange} />
+                    <div className="w-1/2">
+                      <input {...registerDetails("nid")} className="block w-full rounded-lg border border-gray-300 px-4 py-1" type="text" name="nid" value={formData.nid} onChange={handleDetailsChange} />
                       {errorsUpdate.nid && <p className="text-red-500">{errorsUpdate.nid.message}</p>}
                     </div>  
                   </div>
-                  <div> 
-                    <textarea {...registerDetails("address")} rows={2} className="block w-full rounded-lg border border-gray-300 px-4 py-2" type="text" name="address" value={formData.address} onChange={handleDetailsChange} />
-                    {errorsUpdate.address && <p className="text-red-500">{errorsUpdate.address.message}</p>}
-                  </div>  
-                  <div>  
-                    <input {...registerDetails("image")} className="block w-full rounded-lg border border-gray-300 px-4 py-2" type="file" accept="image/*" onChange={handleDetailsFileChange} />
+                  <div className="flex gap-5">
+                    <div className="w-1/2"> 
+                      <input {...registerDetails("address")} className="block w-full rounded-lg border border-gray-300 px-4 py-1" type="text" name="address" value={formData.address} onChange={handleDetailsChange} />
+                      {errorsUpdate.address && <p className="text-red-500">{errorsUpdate.address.message}</p>}
+                    </div>  
+                    <div className="w-1/2">  
+                      <input {...registerDetails("image")} className="block w-full rounded-lg border border-gray-300 px-4 py-1" type="file" accept="image/*" onChange={handleDetailsFileChange} />
+                    </div>
                   </div>
                 </div>
               )}
@@ -226,7 +227,7 @@ export default function UserProfile() {
                       <div className="flex flex-col flex-grow pl-4">
                         <h1 className="text-xl font-bold text-gray-800">{hotel.name}</h1>
                         <span className="text-gray-600 flex items-center">
-                            <MapPinIcon className="h-5 w-5 text-blue-500 mr-1" />
+                            <IconMapPinPlus className="h-5 w-5 text-blue-500 mr-1" />
                             {hotel.location}
                         </span>
                         <div className='flex items-center text-gray-600 mt-2'>
@@ -236,9 +237,9 @@ export default function UserProfile() {
                       </div>
                     </div>
                           
-                    <Link>
+                    <Link to={`/hotel-dashboard/${hotel.id}`}>
                         <button className="text-cyan-500 cursor-pointer hover:text-cyan-600 transition-colors p-2 rounded-md hover:bg-gray-100">
-                            <IconEdit />
+                          <IconTrendingUp />
                         </button>
                     </Link>
                   </div>

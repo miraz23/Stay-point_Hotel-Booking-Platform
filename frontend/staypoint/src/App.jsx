@@ -13,6 +13,7 @@ import ForgotPassword from './components/ForgotPassword';
 import ResetPassword from './components/ResetPassword';
 import UserProfile from './components/UserProfile';
 import ListHotel from './components/ListHotel';
+import HotelDashboard from './components/HotelDashboard';
 import { Toaster } from "react-hot-toast";
 
 const Layout = ({ children }) => {
@@ -45,6 +46,7 @@ const App = () => {
           <Route path="/auth/reset-password/:uid/:token" element={<ResetPassword />} />
           <Route path="/auth/profile" element={<UserProfile />} />
           <Route path="/list-hotel" element={<ListHotel />} />
+          <Route path="/hotel-dashboard/:id" element={<HotelDashboard />} />
         </Routes>
       </Layout>
     </Router>
