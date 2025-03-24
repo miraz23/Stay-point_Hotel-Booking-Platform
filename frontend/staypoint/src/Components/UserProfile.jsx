@@ -9,6 +9,7 @@ import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { listHotels } from '../actions/hotelActions';
 import { Link } from 'react-router-dom';
+import ListHotel from './ListHotel';
 
 const schemaDetails = z.object({
   fname: z.string().min(2, "First name must be at least 2 characters"),
@@ -126,6 +127,8 @@ export default function UserProfile() {
     dispatch(listHotels());
   }, [dispatch]);
 
+  const [isListingHotel, setIsListingHotel] = useState(false)
+
   return (
     <div className='mx-10 my-30'>
       <div className="p-6 bg-white shadow-lg rounded-lg">
@@ -195,8 +198,8 @@ export default function UserProfile() {
                   </button>
                 </div>
               )}
-
-              <button onClick={() => navigate('/list-hotel')} className="flex items-center justify-center px-4 py-2 bg-cyan-500 text-white font-semibold rounded-lg shadow-md hover:opacity-90 transition cursor-pointer">
+        
+              <button onClick={() => setIsListingHotel(true)} className="flex items-center justify-center px-4 py-2 bg-cyan-500 text-white font-semibold rounded-lg shadow-md hover:opacity-90 transition cursor-pointer">
                 <IconMapPinPlus className="mr-1" /> List your hotel
               </button>
             </div>
@@ -205,6 +208,9 @@ export default function UserProfile() {
           <p className="w-full text-lg text-gray-600 text-center italic">User details not found.</p>
         )}
       </div>
+
+      {/* ListHotel Component */}
+      {isListingHotel && <ListHotel setIsListingHotel={setIsListingHotel} isOpen={isListingHotel} />}
 
       {user?.is_host && (
         <div className='pt-10'>

@@ -1,25 +1,26 @@
-import React, { useState } from 'react';
-import { useForm } from 'react-hook-form';
-import { z } from 'zod';
-import { zodResolver } from '@hookform/resolvers/zod';
-import axios from 'axios';
-import { toast } from 'react-hot-toast';
-import { useNavigate } from 'react-router-dom';
+import { useState } from "react"
+import { useForm } from "react-hook-form"
+import { z } from "zod"
+import { zodResolver } from "@hookform/resolvers/zod"
+import axios from "axios"
+import { toast } from "react-hot-toast"
+import { useNavigate } from "react-router-dom"
+import { IconX } from "@tabler/icons-react"
 
 const schemaHotel = z.object({
-    name: z.string().min(3, 'Hotel name must be at least 3 characters'),
-    rating: z.number().min(1, 'Rating must be at least 1').max(5, 'Rating must be at most 5'),
-    description: z.string().min(5, 'Description must be at least 5 characters'),
-    location: z.string().min(3, 'Location must be at least 3 characters'),
-    image: z.any().optional(),
-    checkIn: z.string().regex(/^([01]\d|2[0-3]):([0-5]\d)$/, 'Invalid time format'),
-    checkOut: z.string().regex(/^([01]\d|2[0-3]):([0-5]\d)$/, 'Invalid time format'),
-    amenities: z.array(z.string()).optional(),
-});
+  name: z.string().min(3, "Hotel name must be at least 3 characters"),
+  rating: z.number().min(1, "Rating must be at least 1").max(5, "Rating must be at most 5"),
+  description: z.string().min(5, "Description must be at least 5 characters"),
+  location: z.string().min(3, "Location must be at least 3 characters"),
+  image: z.any().optional(),
+  checkIn: z.string().regex(/^([01]\d|2[0-3]):([0-5]\d)$/, "Invalid time format"),
+  checkOut: z.string().regex(/^([01]\d|2[0-3]):([0-5]\d)$/, "Invalid time format"),
+  amenities: z.array(z.string()).optional(),
+})
 
-export default function ListHotel() {
-  const token = localStorage.getItem('token');
-  const navigate = useNavigate();
+export default function ListHotel(props) {
+  const token = localStorage.getItem("token")
+  const navigate = useNavigate()
 
   const {
     register,
@@ -30,86 +31,96 @@ export default function ListHotel() {
   } = useForm({
     resolver: zodResolver(schemaHotel),
     defaultValues: {
-      name: '',
-      rating: '',
-      description: '',
-      location: '',
+      name: "",
+      rating: "",
+      description: "",
+      location: "",
       image: null,
-      checkIn: '12:00',
-      checkOut: '10:00',
+      checkIn: "12:00",
+      checkOut: "10:00",
       amenities: [],
     },
-  });
+  })
 
   const handleFileChange = (e) => {
-    const file = e.target.files[0];
-    setValue('image', file);
-  };
+    const file = e.target.files[0]
+    setValue("image", file)
+  }
 
   const onSubmit = async (data) => {
-    const formData = new FormData();
+    const formData = new FormData()
     Object.keys(data).forEach((key) => {
-        if (key === 'image' && data[key]) {
-            formData.append(key, data[key]);
-        } else if (key === 'amenities') {
-          formData.append('amenities', JSON.stringify(data.amenities));
-        } else {
-            formData.append(key, data[key]);
-        }
-    });
+      if (key === "image" && data[key]) {
+        formData.append(key, data[key])
+      } else if (key === "amenities") {
+        formData.append("amenities", JSON.stringify(data.amenities))
+      } else {
+        formData.append(key, data[key])
+      }
+    })
 
     try {
-        await axios.post('http://127.0.0.1:8000/api/hotels/add-hotel/', formData, {
-            headers: {
-                Authorization: `Bearer ${token}`,
-                'Content-Type': 'multipart/form-data',
-            },
-        });
-        toast.success('Hotel listed successfully!');
-        reset();
-        if (token) {
-            navigate('/auth/profile');
-        } else {
-            toast.error('You must be logged in to add a hotel.');
-        }
+      await axios.post("http://127.0.0.1:8000/api/hotels/add-hotel/", formData, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "multipart/form-data",
+        },
+      })
+      toast.success("Hotel listed successfully!")
+      reset()
+      if (token) {
+        navigate("/auth/profile")
+      } else {
+        toast.error("You must be logged in to add a hotel.")
+      }
     } catch (error) {
-        toast.error('Error listing hotel.');
+      toast.error("Error listing hotel.")
     }
-  };
+  }
 
+  const [isModalOpen, setIsModalOpen] = useState(true)
+  const closeModal = () => {
+    setIsModalOpen(false)
+    props.setIsListingHotel(false)
+  }
+
+  if (!isModalOpen) return null
 
   return (
-    <div className="flex items-center justify-center p-8 my-20">
-      <form onSubmit={handleSubmit(onSubmit)}>
-        <h1 className="text-3xl font-bold text-gray-800 uppercase py-8">
-          Want to List <span className="text-cyan-500">Your Hotel?</span>
-        </h1>
+    <div className="fixed inset-0 backdrop-blur-xs flex justify-center items-center z-999">
+      <form className="bg-white p-5 rounded-md shadow-xl border border-gray-100" onSubmit={handleSubmit(onSubmit)}>
+        <div className="flex justify-between">
+          <h1 className="text-gray-700 text-xl mb-5 font-bold">List Hotel</h1>
+          <button onClick={closeModal} type="button" className="text-gray-600 hover:text-gray-900 cursor-pointer">
+            <IconX size={20} />
+          </button>
+        </div>
 
         <div className="flex flex-col md:flex-row gap-10 space-y-4">
           <div className="space-y-4">
             <div className="flex gap-5">
               <div>
-                <input {...register('name')} className="block w-full rounded-lg border border-gray-300 px-4 py-2" type="text" placeholder="Hotel Name" />
+                <input {...register("name")} className="block w-full rounded-lg border border-gray-300 px-4 py-2" type="text" placeholder="Hotel Name"/>
                 {errors.name && <p className="text-red-500 text-sm">{errors.name.message}</p>}
               </div>
               <div>
-                <input {...register('rating', { valueAsNumber: true })} className="block w-full rounded-lg border border-gray-300 px-4 py-2" type="number" placeholder="Rating (1-5)" />
+                <input {...register("rating", { valueAsNumber: true })} className="block w-full rounded-lg border border-gray-300 px-4 py-2" type="number" placeholder="Rating (1-5)"/>
                 {errors.rating && <p className="text-red-500 text-sm">{errors.rating.message}</p>}
               </div>
             </div>
 
             <div>
-              <textarea {...register('description')} className="block w-full rounded-lg border border-gray-300 px-4 py-2" placeholder="Hotel Description" />
+              <textarea {...register("description")} className="block w-full rounded-lg border border-gray-300 px-4 py-2" placeholder="Hotel Description"/>
               {errors.description && <p className="text-red-500 text-sm">{errors.description.message}</p>}
             </div>
 
             <div>
-              <textarea {...register('location')} className="block w-full rounded-lg border border-gray-300 px-4 py-2" placeholder="Hotel Location" />
+              <textarea {...register("location")} className="block w-full rounded-lg border border-gray-300 px-4 py-2" placeholder="Hotel Location"/>
               {errors.location && <p className="text-red-500 text-sm">{errors.location.message}</p>}
             </div>
 
             <div>
-              <input className="block w-full rounded-lg border border-gray-300 px-4 py-2" type="file" accept="image/*" onChange={handleFileChange} />
+              <input className="block w-full rounded-lg border border-gray-300 px-4 py-2" type="file" accept="image/*" onChange={handleFileChange}/>
             </div>
           </div>
 
@@ -117,12 +128,12 @@ export default function ListHotel() {
             <div className="flex gap-5 w-full">
               <div className="w-1/2">
                 <p className="text-md font-bold mb-3">Check-in Time:</p>
-                <input {...register('checkIn')} type="time" className="block w-full rounded-lg border border-gray-300 px-4 py-2" />
+                <input {...register("checkIn")} type="time" className="block w-full rounded-lg border border-gray-300 px-4 py-2"/>
                 {errors.checkIn && <p className="text-red-500 text-sm">{errors.checkIn.message}</p>}
               </div>
               <div className="w-1/2">
                 <p className="text-md font-bold mb-3">Check-out Time:</p>
-                <input {...register('checkOut')} type="time" className="block w-full rounded-lg border border-gray-300 px-4 py-2" />
+                <input {...register("checkOut")} type="time" className="block w-full rounded-lg border border-gray-300 px-4 py-2"/>
                 {errors.checkOut && <p className="text-red-500 text-sm">{errors.checkOut.message}</p>}
               </div>
             </div>
@@ -130,9 +141,18 @@ export default function ListHotel() {
             <div>
               <p className="text-md font-bold mb-3">Amenities:</p>
               <div className="grid grid-cols-2 gap-3">
-                {['Room service', 'Free Wifi', 'Swimming pool', 'Air conditioning', 'Parking', '24h-Front Desk', 'Gym', 'Restaurant'].map((item) => (
+                {[
+                  "Room service",
+                  "Free Wifi",
+                  "Swimming pool",
+                  "Air conditioning",
+                  "Parking",
+                  "24h-Front Desk",
+                  "Gym",
+                  "Restaurant",
+                ].map((item) => (
                   <label key={item} className="block">
-                    <input type="checkbox" value={item} {...register('amenities')} /> {item}
+                    <input type="checkbox" value={item} {...register("amenities")} /> {item}
                   </label>
                 ))}
               </div>
@@ -147,5 +167,5 @@ export default function ListHotel() {
         </div>
       </form>
     </div>
-  );
+  )
 }

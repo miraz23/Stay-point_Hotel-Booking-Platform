@@ -5,7 +5,7 @@ import { listHotelDetails } from '../actions/hotelActions';
 import Loader from './Loader';
 import Message from './Message';
 import { MapPinIcon, StarIcon } from '@heroicons/react/24/solid';
-import { IconEdit, IconCircleDashedPlus, IconClock, IconBellQuestion, IconWifi, IconSwimming, IconAirConditioning, IconCar, IconBarbell, IconToolsKitchen3  } from '@tabler/icons-react';
+import { IconEdit, IconClock, IconBellQuestion, IconWifi, IconSwimming, IconAirConditioning, IconCar, IconBarbell, IconToolsKitchen3, IconCirclePlus, IconBed } from '@tabler/icons-react';
 import { Link } from 'react-router-dom';
 
 const HotelDashboard = () => {
@@ -32,11 +32,16 @@ const HotelDashboard = () => {
   };
 
   const formatTime = (timeString) => {
+    if (!timeString) return "N/A";
+
     const [hours, minutes] = timeString.split(":");
+    if (!hours || !minutes) return "Invalid Time";
+
     const date = new Date();
     date.setHours(hours, minutes);
     return date.toLocaleString("en-US", { hour: "numeric", minute: "2-digit", hour12: true });
   };
+
 
 
   return (
@@ -73,7 +78,7 @@ const HotelDashboard = () => {
                             </div>
                           </div>
                           <div className="flex items-center py-3">
-                            <MapPinIcon className="h-6 w-6 text-blue-500 mr-2" />
+                            <MapPinIcon className="h-6 w-6 text-cyan-500 mr-2" />
                             <span className="text-gray-600">{hotel.location}</span>
                           </div>
                       </div>
@@ -115,6 +120,24 @@ const HotelDashboard = () => {
                   </div>
                 </div>
               </div>
+              <div className='mt-10 border-1 border-gray-300 rounded-xl p-5'>
+                <div>
+                  <div className='flex justify-between items-center'>
+                    <h1 className='text-gray-700 text-left text-xl pb-5 font-semibold'>Rooms</h1>
+                    <button className="flex items-center justify-center px-4 py-2 bg-cyan-500 text-white font-semibold rounded-lg shadow-md hover:opacity-90 transition cursor-pointer">
+                      <IconCirclePlus className="mr-1" /> Add Room
+                    </button>
+                  </div>
+                  <div className='flex flex-col justify-center items-center'>
+                    <div className='flex flex-col justify-center items-center p-10'>
+                      <IconBed size={128} className='text-gray-300' />
+                      <p className='text-xl text-gray-400'>No rooms added yet. Click "Add Room" to get started.</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
+              
             </div>
           )}
       </div>
