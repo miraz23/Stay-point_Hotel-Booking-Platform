@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import { listHotelDetails } from '../actions/hotelActions';
@@ -7,6 +7,7 @@ import Message from './Message';
 import { MapPinIcon, StarIcon } from '@heroicons/react/24/solid';
 import { IconEdit, IconClock, IconBellQuestion, IconWifi, IconSwimming, IconAirConditioning, IconCar, IconBarbell, IconToolsKitchen3, IconCirclePlus, IconBed } from '@tabler/icons-react';
 import { Link } from 'react-router-dom';
+import AddRoom from './AddRoom'
 
 const HotelDashboard = () => {
     const { id } = useParams();
@@ -42,7 +43,8 @@ const HotelDashboard = () => {
     return date.toLocaleString("en-US", { hour: "numeric", minute: "2-digit", hour12: true });
   };
 
-
+  // Showing add room modal
+  const [isAddingRoom, setisAddingRoom] = useState(false)
 
   return (
       <div className="text-center my-30 mx-10">
@@ -124,7 +126,7 @@ const HotelDashboard = () => {
                 <div>
                   <div className='flex justify-between items-center'>
                     <h1 className='text-gray-700 text-left text-xl pb-5 font-semibold'>Rooms</h1>
-                    <button className="flex items-center justify-center px-4 py-2 bg-cyan-500 text-white font-semibold rounded-lg shadow-md hover:opacity-90 transition cursor-pointer">
+                    <button onClick={() => setisAddingRoom(true)} className="flex items-center justify-center px-4 py-2 bg-cyan-500 text-white font-semibold rounded-lg shadow-md hover:opacity-90 transition cursor-pointer">
                       <IconCirclePlus className="mr-1" /> Add Room
                     </button>
                   </div>
@@ -140,6 +142,8 @@ const HotelDashboard = () => {
               
             </div>
           )}
+
+          {isAddingRoom && <AddRoom setisAddingRoom={setisAddingRoom} isOpen={isAddingRoom} />}
       </div>
   );
 };

@@ -87,14 +87,19 @@ export default function ListHotel(props) {
   if (!isModalOpen) return null
 
   return (
-    <div className="fixed inset-0 backdrop-blur-xs flex justify-center items-center z-999">
-      <form className="bg-white p-5 rounded-md shadow-xl border border-gray-100" onSubmit={handleSubmit(onSubmit)}>
-        <div className="flex justify-between">
-          <h1 className="text-gray-700 text-xl mb-5 font-bold">List Hotel</h1>
-          <button onClick={closeModal} type="button" className="text-gray-600 hover:text-gray-900 cursor-pointer">
-            <IconX size={20} />
-          </button>
+    <div className="fixed inset-0 backdrop-blur-xs text-gray-700 flex justify-center items-center z-50">
+      <form className="bg-white p-5 rounded-xl shadow-lg border border-gray-200" onSubmit={handleSubmit(onSubmit)}>
+        
+        <div className="mb-5">
+          <div className="flex justify-between">
+            <h1 className="text-gray-800  text-xl font-bold">List Hotel</h1>
+            <button onClick={closeModal} type="button" className="text-gray-600 hover:text-gray-900 cursor-pointer">
+              <IconX size={20} />
+            </button>
+          </div>
+          <p className="text-gray-400">Fill in the details to list your hotel.</p>
         </div>
+          
 
         <div className="flex flex-col md:flex-row gap-10 space-y-4">
           <div className="space-y-4">
@@ -115,16 +120,17 @@ export default function ListHotel(props) {
             </div>
 
             <div>
-              <textarea {...register("location")} className="block w-full rounded-lg border border-gray-300 px-4 py-2" placeholder="Hotel Location"/>
+              <input {...register("location")} className="block w-full rounded-lg border border-gray-300 px-4 py-2" placeholder="Hotel Location"/>
               {errors.location && <p className="text-red-500 text-sm">{errors.location.message}</p>}
             </div>
 
             <div>
+            <p className="text-md font-bold mb-2">Hotel Image</p>
               <input className="block w-full rounded-lg border border-gray-300 px-4 py-2" type="file" accept="image/*" onChange={handleFileChange}/>
             </div>
           </div>
 
-          <div className="space-y-4">
+          <div className="space-y-6">
             <div className="flex gap-5 w-full">
               <div className="w-1/2">
                 <p className="text-md font-bold mb-3">Check-in Time:</p>

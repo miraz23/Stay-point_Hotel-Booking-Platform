@@ -5,7 +5,7 @@ import { toast } from "react-hot-toast";
 import { IconEdit, IconCheck, IconX, IconMapPinPlus, IconTrendingUp } from '@tabler/icons-react';
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useNavigate } from 'react-router-dom';
+// import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { listHotels } from '../actions/hotelActions';
 import { Link } from 'react-router-dom';
@@ -20,7 +20,7 @@ const schemaDetails = z.object({
 });
 
 export default function UserProfile() {
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
   const [user, setUser] = useState(null);
   const [isEditing, setIsEditing] = useState(false);
   const [formData, setFormData] = useState({
