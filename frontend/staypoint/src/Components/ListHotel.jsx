@@ -166,7 +166,7 @@ export default function ListHotel(props) {
           </div>
         </div>
 
-        <div className="flex justify-center mt-7">
+        <div className="flex justify-center mt-5">
           <button type="submit" className="px-5 py-3 bg-cyan-500 text-white font-semibold rounded-lg shadow-md hover:opacity-90 transition cursor-pointer">
             Submit Request
           </button>
