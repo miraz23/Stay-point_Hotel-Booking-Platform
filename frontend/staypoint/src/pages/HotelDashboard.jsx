@@ -2,12 +2,12 @@ import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import { listHotelDetails } from '../actions/hotelActions';
-import Loader from './Loader';
-import Message from './Message';
+import Loader from '../components/Loader';
+import Message from '../components/Message';
 import { MapPinIcon, StarIcon } from '@heroicons/react/24/solid';
 import { IconEdit, IconClock, IconBellQuestion, IconWifi, IconSwimming, IconAirConditioning, IconCar, IconBarbell, IconToolsKitchen3, IconCirclePlus, IconBed } from '@tabler/icons-react';
 import { Link } from 'react-router-dom';
-import AddRoom from './AddRoom'
+import AddRoom from '../components/AddRoom'
 
 const HotelDashboard = () => {
     const { id } = useParams();

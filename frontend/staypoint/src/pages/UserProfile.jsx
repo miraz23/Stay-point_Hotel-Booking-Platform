@@ -4,10 +4,10 @@ import { toast } from "react-hot-toast"
 import { z } from "zod"
 import { useDispatch, useSelector } from "react-redux"
 import { listHotels } from "../actions/hotelActions"
-import ListHotel from "./ListHotel"
-import UpdateProfile from "./UpdateProfile"
-import UserListedHotels from "./UserListedHotels"
-import UserDetails from "./UserDetails"
+import ListHotel from "../components/ListHotel"
+import UpdateProfile from "../components/UpdateProfile"
+import UserListedHotels from "../components/UserListedHotels"
+import UserDetails from "../components/UserDetails"
 
 export default function UserProfile() {
   const [user, setUser] = useState(null)

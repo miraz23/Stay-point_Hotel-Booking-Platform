@@ -1,18 +1,18 @@
 import React from 'react';
 import { BrowserRouter as Router, Route, Routes, useLocation } from 'react-router-dom';
 import Headers from './components/Header';
-import Home from './components/Home';
-import Hotels from './components/Hotels';
+import Home from './pages/Home';
+import Hotels from './pages/Hotels';
 import Hotel from './components/Hotel';
-import AboutUs from './components/AboutUs';
-import ContactUs from './components/ContactUs';
+import AboutUs from './pages/AboutUs';
+import ContactUs from './pages/ContactUs';
 import Footer from './components/Footer';
-import Login from './components/Login';
-import Signin from './components/Signin';
+import Login from './pages/Login';
+import Signin from './pages/Signin';
 import ForgotPassword from './components/ForgotPassword';
 import ResetPassword from './components/ResetPassword';
-import UserProfile from './components/UserProfile';
-import HotelDashboard from './components/HotelDashboard';
+import UserProfile from './pages/UserProfile';
+import HotelDashboard from './pages/HotelDashboard';
 import { Toaster } from "react-hot-toast";
 
 const Layout = ({ children }) => {

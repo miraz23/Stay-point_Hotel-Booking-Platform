@@ -6,6 +6,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { IconEye, IconEyeClosed } from '@tabler/icons-react';
+import { Link } from 'react-router-dom';
 
 const loginSchema = z.object({
   email: z.string().email({ message: "Invalid email format" }),
@@ -61,7 +62,7 @@ export default function Login() {
               <input id="remember-me" name="remember-me" type="checkbox" className="h-4 w-4" />
               <label htmlFor="remember-me" className="ml-2 block text-sm text-gray-700">Remember me</label>
             </div>
-            <a href="/auth/forgot-password" className="text-cyan-500 hover:text-cyan-800">Forgot password?</a>
+            <Link to="/auth/forgot-password" className="text-cyan-500 hover:text-cyan-800">Forgot password?</Link>
           </div>
 
           <button className="w-full px-4 py-2 text-sm rounded-lg shadow-sm transition-all duration-500 ease-in-out hover:opacity-90 cursor-pointer text-white bg-gradient-to-r from-cyan-500 to-cyan-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-cyan-800" type="submit" disabled={loading}>

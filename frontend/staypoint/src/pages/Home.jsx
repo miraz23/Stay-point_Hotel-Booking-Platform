@@ -1,7 +1,7 @@
 import React from 'react';
-import Banner from './Banner';
-import FeaturedHotels from './FeaturedHotels';
-import Faq from './Faq';
+import Banner from '../components/Banner';
+import FeaturedHotels from '../components/FeaturedHotels';
+import Faq from '../components/Faq';
 
 const Home = () => {
   return (
