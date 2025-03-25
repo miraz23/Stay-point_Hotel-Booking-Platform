@@ -70,6 +70,7 @@ export default function ListHotel(props) {
       reset()
       if (token) {
         navigate("/auth/profile")
+        closeModal()
       } else {
         toast.error("You must be logged in to add a hotel.")
       }

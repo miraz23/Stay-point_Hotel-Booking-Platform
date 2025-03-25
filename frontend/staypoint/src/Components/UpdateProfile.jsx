@@ -7,96 +7,120 @@ import { z } from "zod"
 import { zodResolver } from "@hookform/resolvers/zod"
 
 const schemaDetails = z.object({
-    fname: z.string().min(2, "First name must be at least 2 characters"),
-    lname: z.string().min(2, "Last name must be at least 2 characters"),
-    contactNo: z.string().min(11, "Contact number must be 11 digits"),
-    address: z.string().min(3, "Address is required"),
-    nid: z.string().min(10, "NID must be 10 characters"),
+  fname: z.string().min(2, "First name must be at least 2 characters"),
+  lname: z.string().min(2, "Last name must be at least 2 characters"),
+  contactNo: z.string().min(11, "Contact number must be 11 digits"),
+  address: z.string().min(3, "Address is required"),
+  nid: z.string().min(10, "NID must be 10 characters"),
 })
 
 export default function UpdateProfile({ isOpen, setIsUpdatingProfile, user, setUser }) {
-    const token = localStorage.getItem("token")
+  const token = localStorage.getItem("token")
 
-    const [formData, setFormData] = useState({
-        fname: user?.name.split(" ")[0] || "",
-        lname: user?.name.split(" ")[1] || "",
-        email: user?.email || "",
-        contactNo: user?.contact_no || "",
-        address: user?.address || "",
-        nid: user?.nid_number || "",
-        image: null,
-    })
+  // Improved name parsing logic
+  const parseUserName = (fullName) => {
+    if (!fullName) return { fname: "", lname: "" }
 
-    const {
-        register,
-        handleSubmit,
-        formState: { errors },
-    } = useForm({
-        resolver: zodResolver(schemaDetails),
-        defaultValues: {
-            fname: user?.name.split(" ")[0] || "",
-            lname: user?.name.split(" ")[1] || "",
-            contactNo: user?.contact_no || "",
-            address: user?.address || "",
-            nid: user?.nid_number || "",
+    const nameParts = fullName.split(" ")
+
+    return {
+      fname: nameParts[0] || "",
+      lname: nameParts.slice(1).join(" ") || "",
+    }
+  }
+
+  const [formData, setFormData] = useState({
+    fname: "",
+    lname: "",
+    email: user?.email || "",
+    contactNo: user?.contact_no || "",
+    address: user?.address || "",
+    nid: user?.nid_number || "",
+    image: null,
+  })
+
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors },
+  } = useForm({
+    resolver: zodResolver(schemaDetails),
+    defaultValues: {
+      fname: "",
+      lname: "",
+      contactNo: user?.contact_no || "",
+      address: user?.address || "",
+      nid: user?.nid_number || "",
+    },
+  })
+
+  const handleDetailsChange = (e) => {
+    const { name, value } = e.target
+    setFormData((prevState) => ({ ...prevState, [name]: value }))
+  }
+
+  const handleDetailsFileChange = (e) => {
+    setFormData((prevState) => ({ ...prevState, image: e.target.files[0] }))
+  }
+
+  const closeModal = () => {
+    setIsUpdatingProfile(false)
+  }
+
+  const onSubmit = async (data) => {
+    const updatedData = new FormData()
+    updatedData.append("fname", formData.fname)
+    updatedData.append("lname", formData.lname)
+    updatedData.append("email", formData.email)
+    updatedData.append("contactNo", formData.contactNo)
+    updatedData.append("address", formData.address)
+    updatedData.append("nid", formData.nid)
+    if (formData.image) {
+      updatedData.append("image", formData.image)
+    }
+
+    try {
+      const response = await axios.put("http://127.0.0.1:8000/api/users/update-profile/", updatedData, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "multipart/form-data",
         },
-    })
-
-    const handleDetailsChange = (e) => {
-        const { name, value } = e.target
-        setFormData((prevState) => ({ ...prevState, [name]: value }))
+      })
+      setUser(response.data)
+      toast.success("Profile updated successfully!")
+      closeModal()
+    } catch (error) {
+      toast.error("Error updating profile.")
     }
+  }
 
-    const handleDetailsFileChange = (e) => {
-        setFormData((prevState) => ({ ...prevState, image: e.target.files[0] }))
+  useEffect(() => {
+    if (user) {
+      const { fname, lname } = parseUserName(user.name)
+
+      setFormData({
+        fname,
+        lname,
+        email: user.email || "",
+        contactNo: user.contact_no || "",
+        address: user.address || "",
+        nid: user.nid_number || "",
+        image: null,
+      })
+
+      // Also update the form default values
+      reset({
+        fname,
+        lname,
+        contactNo: user.contact_no || "",
+        address: user.address || "",
+        nid: user.nid_number || "",
+      })
     }
+  }, [user, reset])
 
-    const closeModal = () => {
-        setIsUpdatingProfile(false)
-    }
-
-    const onSubmit = async (data) => {
-        const updatedData = new FormData()
-        updatedData.append("fname", formData.fname)
-        updatedData.append("lname", formData.lname)
-        updatedData.append("email", formData.email)
-        updatedData.append("contactNo", formData.contactNo)
-        updatedData.append("address", formData.address)
-        updatedData.append("nid", formData.nid)
-        if (formData.image) {
-            updatedData.append("image", formData.image)
-        }
-
-        try {
-            const response = await axios.put("http://127.0.0.1:8000/api/users/update-profile/", updatedData, {
-                headers: {
-                    Authorization: `Bearer ${token}`,
-                    "Content-Type": "multipart/form-data",
-                },
-            })
-            setUser(response.data)
-            toast.success("Profile updated successfully!")
-            closeModal()
-        } catch (error) {
-            toast.error("Error updating profile.")
-        }
-    }
-
-    useEffect(() => {
-        if (user) {
-            setFormData({
-                fname: user.name.split(" ")[0] || "",
-                lname: user.name.split(" ").slice(1).join(" ") || "",
-                email: user.email || "",
-                contactNo: user.contact_no || "",
-                address: user.address || "",
-                nid: user.nid_number || "",
-                image: null,
-            })
-        }
-    }, [user])
-
-    if (!isOpen) return null
+  if (!isOpen) return null
 
     return (
         <div className="fixed inset-0 backdrop-blur-xs flex justify-center text-gray-700 text-left items-center z-50">
