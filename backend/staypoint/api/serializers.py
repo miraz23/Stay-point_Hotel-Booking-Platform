@@ -1,12 +1,7 @@
 from rest_framework import serializers
-from .models import Hotel
+from .models import Hotel, Room
 from django.contrib.auth.models import User
 from rest_framework_simplejwt.tokens import RefreshToken
-
-class HotelSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Hotel
-        fields = '__all__'
 
 class UserSerializer(serializers.ModelSerializer):
     name = serializers.SerializerMethodField(read_only=True)
@@ -54,3 +49,31 @@ class UserSerializer(serializers.ModelSerializer):
     def get_token(self, obj):
         token = RefreshToken.for_user(obj)
         return str(token.access_token)
+    
+class HotelSerializer(serializers.ModelSerializer):
+    rooms = serializers.SerializerMethodField()
+
+    class Meta:
+        model = Hotel
+        fields = [
+            "id",
+            "user",
+            "name",
+            "description",
+            "location",
+            "rating",
+            "image",
+            "check_in_time",
+            "check_out_time",
+            "amenities",
+            "rooms",
+        ]
+
+    def get_rooms(self, obj):
+        rooms = Room.objects.filter(hotel=obj)
+        return RoomSerializer(rooms, many=True).data
+
+class RoomSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Room
+        fields = '__all__'

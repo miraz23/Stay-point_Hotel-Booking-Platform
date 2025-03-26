@@ -1,8 +1,8 @@
 from django.shortcuts import render
 from rest_framework.response import Response
 from rest_framework.decorators import api_view, permission_classes
-from .models import UserDetails, Hotel
-from .serializers import HotelSerializer, UserSerializer
+from .models import UserDetails, Hotel, Room
+from .serializers import HotelSerializer, UserSerializer, RoomSerializer
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework_simplejwt.views import TokenObtainPairView
 from .serializers import UserSerializer
@@ -222,4 +222,32 @@ def addHotel(request):
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
     except Exception as e:
+        return Response({'detail': str(e)}, status=status.HTTP_400_BAD_REQUEST)
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def addRoom(request):
+    data = request.data
+    image = request.FILES.get('image')
+
+    try:
+        amenities = json.loads(data.get('amenities', '[]'))
+        room = Room.objects.create(
+            hotel_id=data['hotel_id'],
+            name=data['name'],
+            type=data['type'],
+            bed_config=data['bedConfig'],
+            guests=int(data['guests']),
+            price=float(data['price']),
+            num_rooms=int(data['numRooms']),
+            description=data['description'],
+            amenities=amenities,
+            image=image,
+        )
+
+        serializer = RoomSerializer(room, many=False)
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+    except Exception as e:
+        print("Error:", str(e))
         return Response({'detail': str(e)}, status=status.HTTP_400_BAD_REQUEST)
