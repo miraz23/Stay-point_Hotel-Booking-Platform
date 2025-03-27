@@ -13,5 +13,6 @@ urlpatterns = [
     path('hotels/', views.getHotels,name="getHotels"),
     path('hotels/<int:pk>/', views.getHotel,name="getHotel"),
     path('hotels/add-hotel/', views.addHotel, name="addHotel"),
+    path('hotels/<int:pk>/update/', views.updateHotel, name="updateHotel"),
     path('rooms/add-room/', views.addRoom, name="addRoom"),
 ]

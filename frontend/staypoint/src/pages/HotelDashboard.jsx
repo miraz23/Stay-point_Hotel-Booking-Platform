@@ -8,6 +8,7 @@ import { MapPinIcon, StarIcon } from '@heroicons/react/24/solid';
 import { IconEdit, IconClock, IconBellQuestion, IconWifi, IconSwimming, IconAirConditioning, IconCar, IconBarbell, IconToolsKitchen3, IconCirclePlus, IconBed, IconUsers, IconAdjustmentsHorizontal, IconCalendarCheck } from '@tabler/icons-react';
 import { Link } from 'react-router-dom';
 import AddRoom from '../components/AddRoom'
+import UpdateHotel from '../components/UpdateHotel'
 
 const HotelDashboard = () => {
     const { id } = useParams();
@@ -45,6 +46,8 @@ const HotelDashboard = () => {
 
   // Showing add room modal
   const [isAddingRoom, setisAddingRoom] = useState(false)
+  // Showing update hotel modal
+  const [isUpdatingHotel, setIsUpdatingHotel] = useState(false)
 
   return (
       <div className="text-center my-30 mx-10">
@@ -68,11 +71,9 @@ const HotelDashboard = () => {
                           <div className='flex justify-between'>
                             <div className='flex items-center'>
                               <h1 className='text-4xl font-semibold'>{hotel.name}</h1>
-                              <Link>
-                                <button className="text-cyan-500 cursor-pointer hover:text-cyan-600 transition-colors p-2 rounded-md relative" title="Update Hotel">
-                                  <IconEdit size={28} />
-                                </button>
-                              </Link>
+                              <button onClick={() => setIsUpdatingHotel(true)} className="text-cyan-500 cursor-pointer hover:text-cyan-600 transition-colors p-2 rounded-md relative" title="Update Hotel">
+                                <IconEdit size={28} />
+                              </button>
                             </div>
                             <div className="flex items-center">
                               <StarIcon className="h-5 w-5 text-yellow-500 mr-2"/>
@@ -186,6 +187,7 @@ const HotelDashboard = () => {
           )}
 
           {isAddingRoom && <AddRoom setisAddingRoom={setisAddingRoom} isOpen={isAddingRoom} hotelId={hotel.id} />}
+          {isUpdatingHotel && <UpdateHotel setIsUpdatingHotel={setIsUpdatingHotel} isOpen={isUpdatingHotel} hotel={hotel} setHotel={(updatedHotel) => dispatch({ type: 'HOTEL_DETAILS_SUCCESS', payload: updatedHotel })} />}
       </div>
   );
 };

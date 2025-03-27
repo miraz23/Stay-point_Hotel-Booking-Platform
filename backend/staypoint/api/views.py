@@ -251,3 +251,37 @@ def addRoom(request):
     except Exception as e:
         print("Error:", str(e))
         return Response({'detail': str(e)}, status=status.HTTP_400_BAD_REQUEST)
+
+@api_view(['PUT'])
+@permission_classes([IsAuthenticated])
+def updateHotel(request, pk):
+    try:
+        hotel = Hotel.objects.get(id=pk)
+        
+        # Check if the user owns this hotel
+        if hotel.user != request.user:
+            return Response({"detail": "You don't have permission to update this hotel"}, status=status.HTTP_403_FORBIDDEN)
+
+        data = request.data
+        image = request.FILES.get('image')
+
+        hotel.name = data.get('name', hotel.name)
+        hotel.description = data.get('description', hotel.description)
+        hotel.location = data.get('location', hotel.location)
+        hotel.rating = float(data.get('rating', hotel.rating))
+        hotel.check_in_time = data.get('checkIn', hotel.check_in_time)
+        hotel.check_out_time = data.get('checkOut', hotel.check_out_time)
+        hotel.amenities = json.loads(data.get('amenities', '[]'))
+        
+        if image:
+            hotel.image = image
+
+        hotel.save()
+
+        serializer = HotelSerializer(hotel, many=False)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+    except Hotel.DoesNotExist:
+        return Response({"detail": "Hotel not found"}, status=status.HTTP_404_NOT_FOUND)
+    except Exception as e:
+        return Response({'detail': str(e)}, status=status.HTTP_400_BAD_REQUEST)
