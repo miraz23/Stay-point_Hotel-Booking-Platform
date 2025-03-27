@@ -285,3 +285,58 @@ def updateHotel(request, pk):
         return Response({"detail": "Hotel not found"}, status=status.HTTP_404_NOT_FOUND)
     except Exception as e:
         return Response({'detail': str(e)}, status=status.HTTP_400_BAD_REQUEST)
+
+@api_view(['PUT'])
+@permission_classes([IsAuthenticated])
+def updateRoom(request, pk):
+    try:
+        room = Room.objects.get(id=pk)
+        hotel = room.hotel
+        
+        # Check if the user owns this hotel
+        if hotel.user != request.user:
+            return Response({"detail": "You don't have permission to update this room"}, status=status.HTTP_403_FORBIDDEN)
+
+        data = request.data
+        image = request.FILES.get('image')
+
+        room.name = data.get('name', room.name)
+        room.type = data.get('type', room.type)
+        room.bed_config = data.get('bedConfig', room.bed_config)
+        room.guests = int(data.get('guests', room.guests))
+        room.price = float(data.get('price', room.price))
+        room.num_rooms = int(data.get('numRooms', room.num_rooms))
+        room.description = data.get('description', room.description)
+        room.amenities = json.loads(data.get('amenities', '[]'))
+        
+        if image:
+            room.image = image
+
+        room.save()
+
+        serializer = RoomSerializer(room, many=False)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+    except Room.DoesNotExist:
+        return Response({"detail": "Room not found"}, status=status.HTTP_404_NOT_FOUND)
+    except Exception as e:
+        return Response({'detail': str(e)}, status=status.HTTP_400_BAD_REQUEST)
+
+@api_view(['DELETE'])
+@permission_classes([IsAuthenticated])
+def deleteRoom(request, pk):
+    try:
+        room = Room.objects.get(id=pk)
+        hotel = room.hotel
+        
+        # Check if the user owns this hotel
+        if hotel.user != request.user:
+            return Response({"detail": "You don't have permission to delete this room"}, status=status.HTTP_403_FORBIDDEN)
+
+        room.delete()
+        return Response({"detail": "Room deleted successfully"}, status=status.HTTP_200_OK)
+
+    except Room.DoesNotExist:
+        return Response({"detail": "Room not found"}, status=status.HTTP_404_NOT_FOUND)
+    except Exception as e:
+        return Response({'detail': str(e)}, status=status.HTTP_400_BAD_REQUEST)

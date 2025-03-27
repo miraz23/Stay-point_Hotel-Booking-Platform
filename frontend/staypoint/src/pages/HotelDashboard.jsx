@@ -5,10 +5,13 @@ import { listHotelDetails } from '../actions/hotelActions';
 import Loader from '../components/Loader';
 import Message from '../components/Message';
 import { MapPinIcon, StarIcon } from '@heroicons/react/24/solid';
-import { IconEdit, IconClock, IconBellQuestion, IconWifi, IconSwimming, IconAirConditioning, IconCar, IconBarbell, IconToolsKitchen3, IconCirclePlus, IconBed, IconUsers, IconAdjustmentsHorizontal, IconCalendarCheck } from '@tabler/icons-react';
+import { IconEdit, IconClock, IconBellQuestion, IconWifi, IconSwimming, IconAirConditioning, IconCar, IconBarbell, IconToolsKitchen3, IconCirclePlus, IconBed, IconUsers, IconAdjustmentsHorizontal, IconCalendarCheck, IconTrash } from '@tabler/icons-react';
 import { Link } from 'react-router-dom';
 import AddRoom from '../components/AddRoom'
 import UpdateHotel from '../components/UpdateHotel'
+import EditRoom from '../components/EditRoom'
+import { deleteRoom } from '../actions/hotelActions';
+import { toast } from 'react-hot-toast';
 
 const HotelDashboard = () => {
     const { id } = useParams();
@@ -48,6 +51,27 @@ const HotelDashboard = () => {
   const [isAddingRoom, setisAddingRoom] = useState(false)
   // Showing update hotel modal
   const [isUpdatingHotel, setIsUpdatingHotel] = useState(false)
+  // Showing edit room modal
+  const [isEditingRoom, setIsEditingRoom] = useState(false)
+  // Selected room for editing
+  const [selectedRoom, setSelectedRoom] = useState(null)
+
+  const handleEditRoom = (room) => {
+    setSelectedRoom(room);
+    setIsEditingRoom(true);
+  }
+
+  const handleDeleteRoom = async (roomId) => {
+    if (window.confirm('Are you sure you want to delete this room?')) {
+      try {
+        dispatch(deleteRoom(roomId));
+        toast.success('Room deleted successfully');
+        dispatch(listHotelDetails(id)); // Refresh hotel details
+      } catch (error) {
+        toast.error('Error deleting room');
+      }
+    }
+  }
 
   return (
       <div className="text-center my-30 mx-10">
@@ -132,7 +156,7 @@ const HotelDashboard = () => {
                     </button>
                   </div>
                   {hotel.rooms && hotel.rooms.length > 0 ? (
-                    <div className='flex gap-5 mt-5'>
+                    <div className='flex gap-5 mt-5 flex-wrap'>
                       {hotel.rooms.map((room) => (
                       <div className="w-full md:w-[calc(50%-12px)] flex flex-col justify-between border-1 border-gray-200 rounded-lg p-4 bg-white shadow-2xl" key={room.id}>
                         <div className="flex flex-col justify-center items-center mb-4">
@@ -152,11 +176,11 @@ const HotelDashboard = () => {
                                 <span className="text-cyan-600 font-bold">${room.price}</span>
                             </div>
                         </div>
-                        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-5 mb-5">
-                            <span className="flex text-gray-600 text-md font-semibold items-center"><IconUsers size={20} className='mr-1'/> {room.guests} Guests</span>
-                            <span className="flex text-gray-600 text-md font-semibold items-center"><IconAdjustmentsHorizontal size={20} className='mr-1'/> {room.type} Room</span>
-                            <span className="flex text-gray-600 text-md font-semibold items-center"><IconBed size={22} className='mr-1'/> {room.bed_config} Bed</span>
-                            <span className="flex text-gray-600 text-md font-semibold items-center"><IconCalendarCheck size={22} className='mr-1'/> {room.num_rooms} Rooms</span>
+                        <div className="grid md:grid-cols-2 lg:grid-cols-4 mb-5">
+                            <span className="flex text-gray-600 text-sm font-semibold items-center"><IconUsers size={20} className='mr-1'/> {room.guests} Guests</span>
+                            <span className="flex text-gray-600 text-sm font-semibold items-center"><IconAdjustmentsHorizontal size={20} className='mr-1'/> {room.type} Room</span>
+                            <span className="flex text-gray-600 text-sm font-semibold items-center"><IconBed size={22} className='mr-1'/> {room.bed_config} Bed</span>
+                            <span className="flex text-gray-600 text-sm font-semibold items-center"><IconCalendarCheck size={22} className='mr-1'/> {room.num_rooms} Rooms</span>
                         </div>
                         <div>
                           <p className='text-gray-600 text-left'>{room.description}</p>
@@ -169,8 +193,12 @@ const HotelDashboard = () => {
                           ))}
                         </div>
                         <div className='w-full flex gap-2'>
-                          <div className='border-1 border-gray-300 w-1/2 py-2 text-gray-600 cursor-pointer'>Edit</div>
-                          <div className='border-1 border-gray-300 w-1/2 py-2 text-red-500 cursor-pointer'>Delete</div>
+                          <div className='border-1 border-gray-300 w-1/2 py-2 text-gray-600 cursor-pointer hover:bg-gray-100 flex items-center justify-center'onClick={() => handleEditRoom(room)}>
+                            <IconEdit size={20} className="mr-1" /> Edit
+                          </div>
+                          <div className='border-1 border-gray-300 w-1/2 py-2 text-red-500 cursor-pointer hover:bg-red-50 flex items-center justify-center'onClick={() => handleDeleteRoom(room.id)}>
+                            <IconTrash size={20} className="mr-1" /> Delete
+                          </div>
                         </div>
                       </div>
                       ))}
@@ -188,6 +216,7 @@ const HotelDashboard = () => {
 
           {isAddingRoom && <AddRoom setisAddingRoom={setisAddingRoom} isOpen={isAddingRoom} hotelId={hotel.id} />}
           {isUpdatingHotel && <UpdateHotel setIsUpdatingHotel={setIsUpdatingHotel} isOpen={isUpdatingHotel} hotel={hotel} setHotel={(updatedHotel) => dispatch({ type: 'HOTEL_DETAILS_SUCCESS', payload: updatedHotel })} />}
+          {isEditingRoom && <EditRoom setIsEditingRoom={setIsEditingRoom} isOpen={isEditingRoom} room={selectedRoom} hotelId={hotel.id} />}
       </div>
   );
 };

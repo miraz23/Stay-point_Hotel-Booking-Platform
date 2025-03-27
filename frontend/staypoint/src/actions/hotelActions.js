@@ -65,3 +65,42 @@ export const addRoom = (formData) => async (dispatch) => {
         });
     }
 };
+
+export const updateRoom = (roomId, formData) => async (dispatch) => {
+    try {
+        const token = localStorage.getItem('token')
+        const { data } = await axios.put(
+            `http://127.0.0.1:8000/api/rooms/${roomId}/update/`,
+            formData,
+            {
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                    Authorization: `Bearer ${token}`,
+                },
+            }
+        )
+        dispatch({ type: 'ROOM_UPDATE_SUCCESS', payload: data })
+        return data
+    } catch (error) {
+        dispatch({ type: 'ROOM_UPDATE_FAIL', payload: error.response?.data?.detail || error.message })
+        throw error
+    }
+}
+
+export const deleteRoom = (roomId) => async (dispatch) => {
+    try {
+        const token = localStorage.getItem('token')
+        await axios.delete(
+            `http://127.0.0.1:8000/api/rooms/${roomId}/delete/`,
+            {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            }
+        )
+        dispatch({ type: 'ROOM_DELETE_SUCCESS' })
+    } catch (error) {
+        dispatch({ type: 'ROOM_DELETE_FAIL', payload: error.response?.data?.detail || error.message })
+        throw error
+    }
+}
