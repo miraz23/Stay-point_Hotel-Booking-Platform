@@ -5,7 +5,7 @@ import { listHotelDetails } from '../actions/hotelActions';
 import Loader from '../components/Loader';
 import Message from '../components/Message';
 import { MapPinIcon, StarIcon } from '@heroicons/react/24/solid';
-import { IconEdit, IconClock, IconBellQuestion, IconWifi, IconSwimming, IconAirConditioning, IconCar, IconBarbell, IconToolsKitchen3, IconCirclePlus, IconBed } from '@tabler/icons-react';
+import { IconEdit, IconClock, IconBellQuestion, IconWifi, IconSwimming, IconAirConditioning, IconCar, IconBarbell, IconToolsKitchen3, IconCirclePlus, IconBed, IconUsers, IconAdjustmentsHorizontal, IconCalendarCheck } from '@tabler/icons-react';
 import { Link } from 'react-router-dom';
 import AddRoom from '../components/AddRoom'
 
@@ -125,25 +125,67 @@ const HotelDashboard = () => {
               <div className='mt-10 border-1 border-gray-300 rounded-xl p-5'>
                 <div>
                   <div className='flex justify-between items-center'>
-                    <h1 className='text-gray-700 text-left text-xl pb-5 font-semibold'>Rooms</h1>
+                    <h1 className='text-gray-700 text-left text-xl font-semibold'>Rooms</h1>
                     <button onClick={() => setisAddingRoom(true)} className="flex items-center justify-center px-4 py-2 bg-cyan-500 text-white font-semibold rounded-lg shadow-md hover:opacity-90 transition cursor-pointer">
                       <IconCirclePlus className="mr-1" /> Add Room
                     </button>
                   </div>
-                  <div className='flex flex-col justify-center items-center'>
+                  {hotel.rooms && hotel.rooms.length > 0 ? (
+                    <div className='flex gap-5 mt-5'>
+                      {hotel.rooms.map((room) => (
+                      <div className="w-full md:w-[calc(50%-12px)] flex flex-col justify-between border-1 border-gray-200 rounded-lg p-4 bg-white shadow-2xl" key={room.id}>
+                        <div className="flex flex-col justify-center items-center mb-4">
+                            <div className="aspect-[3/2] flex items-center justify-center rounded-xl">
+                                {room.image ? (
+                                    <img className="w-full h-full object-cover rounded-xl" src={`http://127.0.0.1:8000/${room.image}`} alt={room.name} />
+                                ) : (
+                                    <img className="w-full h-full object-cover rounded-xl" src="/default-room.jpg" alt="Hotel Logo" />
+                                )}
+                            </div>
+                        </div>
+                        <div className="flex justify-between mb-5">
+                            <div className="flex items-center">
+                              <h1 className="text-xl font-bold text-gray-700">{room.name}</h1>
+                            </div>
+                            <div className="flex items-center">
+                                <span className="text-cyan-600 font-bold">${room.price}</span>
+                            </div>
+                        </div>
+                        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-5 mb-5">
+                            <span className="flex text-gray-600 text-md font-semibold items-center"><IconUsers size={20} className='mr-1'/> {room.guests} Guests</span>
+                            <span className="flex text-gray-600 text-md font-semibold items-center"><IconAdjustmentsHorizontal size={20} className='mr-1'/> {room.type} Room</span>
+                            <span className="flex text-gray-600 text-md font-semibold items-center"><IconBed size={22} className='mr-1'/> {room.bed_config} Bed</span>
+                            <span className="flex text-gray-600 text-md font-semibold items-center"><IconCalendarCheck size={22} className='mr-1'/> {room.num_rooms} Rooms</span>
+                        </div>
+                        <div>
+                          <p className='text-gray-600 text-left'>{room.description}</p>
+                        </div>
+                        <div className='grid grid-cols-2 md:grid-cols-4 gap-4 my-5'>
+                          {room.amenities.map((amenity, index) => (
+                            <div key={index} className='flex items-center justify-center bg-gray-100 text-xs rounded-xl py-1'>
+                              <span className='text-gray-700'>{amenity}</span>
+                            </div>
+                          ))}
+                        </div>
+                        <div className='w-full flex gap-2'>
+                          <div className='border-1 border-gray-300 w-1/2 py-2 text-gray-600 cursor-pointer'>Edit</div>
+                          <div className='border-1 border-gray-300 w-1/2 py-2 text-red-500 cursor-pointer'>Delete</div>
+                        </div>
+                      </div>
+                      ))}
+                    </div>
+                  ) : (
                     <div className='flex flex-col justify-center items-center p-10'>
                       <IconBed size={128} className='text-gray-300' />
                       <p className='text-xl text-gray-400'>No rooms added yet. Click "Add Room" to get started.</p>
                     </div>
-                  </div>
+                  )}
                 </div>
               </div>
-              
-              
             </div>
           )}
 
-          {isAddingRoom && <AddRoom setisAddingRoom={setisAddingRoom} isOpen={isAddingRoom} />}
+          {isAddingRoom && <AddRoom setisAddingRoom={setisAddingRoom} isOpen={isAddingRoom} hotelId={hotel.id} />}
       </div>
   );
 };

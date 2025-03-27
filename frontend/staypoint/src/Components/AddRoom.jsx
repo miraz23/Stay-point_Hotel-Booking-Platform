@@ -1,10 +1,11 @@
 import { useForm } from "react-hook-form"
 import { z } from "zod"
 import { zodResolver } from "@hookform/resolvers/zod"
-import axios from "axios"
 import { toast } from "react-hot-toast"
 import { useNavigate } from "react-router-dom"
 import { IconX } from "@tabler/icons-react"
+import { useDispatch } from "react-redux";
+import { addRoom } from "../actions/hotelActions";
 
 const schemaRoom = z.object({
   name: z.string().min(3, "Room name must be at least 3 characters"),
@@ -19,8 +20,8 @@ const schemaRoom = z.object({
 })
 
 export default function AddRoom(props) {
-  const token = localStorage.getItem("token")
   const navigate = useNavigate()
+  const dispatch = useDispatch();
 
   const {
     register,
@@ -60,20 +61,13 @@ export default function AddRoom(props) {
       }
     })
 
+    formData.append("hotel_id", props.hotelId);
+
     try {
-      await axios.post("http://127.0.0.1:8000/api/rooms/add-room/", formData, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "multipart/form-data",
-        },
-      })
+      dispatch(addRoom(formData));
       toast.success("Room listed successfully!")
       reset()
-      if (token) {
-        navigate("/auth/profile")
-      } else {
-        toast.error("You must be logged in to add a room.")
-      }
+      props.setisAddingRoom(false);
     } catch (error) {
       toast.error("Error listing room.")
     }
@@ -123,14 +117,14 @@ export default function AddRoom(props) {
                 <option value="">Bed Configuration</option>
                 <option value="Single">Single Bed</option>
                 <option value="Double">Double Bed</option>
-                <option value="Double">Queen Bed</option>
-                <option value="Suite">King Bed</option>
+                <option value="Queen">Queen Bed</option>
+                <option value="King">King Bed</option>
               </select>
               {errors.bedConfig && <p className="text-red-500 text-sm">{errors.bedConfig.message}</p>}
             </div>
             <div className="flex gap-5">
               <div>
-                <input {...register("numRooms", { valueAsNumber: true })} className="block w-full rounded-lg border border-gray-300 px-4 py-2" type="number" placeholder="Guests"/>
+                <input {...register("guests", { valueAsNumber: true })} className="block w-full rounded-lg border border-gray-300 px-4 py-2" type="number" placeholder="Guests"/>
               </div>
               <div>
                 <input {...register("price", { valueAsNumber: true })} className="block w-full rounded-lg border border-gray-300 px-4 py-2" type="number" placeholder="Price per Night"/>
