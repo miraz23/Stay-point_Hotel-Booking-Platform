@@ -340,3 +340,21 @@ def deleteRoom(request, pk):
         return Response({"detail": "Room not found"}, status=status.HTTP_404_NOT_FOUND)
     except Exception as e:
         return Response({'detail': str(e)}, status=status.HTTP_400_BAD_REQUEST)
+
+@api_view(['DELETE'])
+@permission_classes([IsAuthenticated])
+def deleteHotel(request, pk):
+    try:
+        hotel = Hotel.objects.get(id=pk)
+        
+        # Check if the user owns this hotel
+        if hotel.user != request.user:
+            return Response({"detail": "You don't have permission to delete this hotel"}, status=status.HTTP_403_FORBIDDEN)
+
+        hotel.delete()
+        return Response({"detail": "Hotel deleted successfully"}, status=status.HTTP_200_OK)
+
+    except Hotel.DoesNotExist:
+        return Response({"detail": "Hotel not found"}, status=status.HTTP_404_NOT_FOUND)
+    except Exception as e:
+        return Response({'detail': str(e)}, status=status.HTTP_400_BAD_REQUEST)

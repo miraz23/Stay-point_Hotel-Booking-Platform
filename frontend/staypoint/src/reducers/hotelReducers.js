@@ -48,3 +48,44 @@ export const addRoomReducer = (state = {hotel: []}, action) =>{
             return state;
     }
 }
+
+export const roomDeleteReducer = (state = {rooms: []}, action) => {
+    switch (action.type) {
+        case 'ROOM_DELETE_SUCCESS':
+            return {
+                ...state,
+                rooms: state.rooms.filter(room => room.id !== action.payload)
+            }
+        case 'ROOM_DELETE_FAIL':
+            return {
+                ...state,
+                error: action.payload
+            }
+        default:
+            return state;
+    }
+}
+
+export const hotelDeleteReducer = (state = {hotels: []}, action) => {
+    switch (action.type) {
+        case 'HOTEL_DELETE_REQUEST':
+            return {
+                ...state,
+                loading: true
+            }
+        case 'HOTEL_DELETE_SUCCESS':
+            return {
+                ...state,
+                loading: false,
+                hotels: state.hotels.filter(hotel => hotel.id !== action.payload)
+            }
+        case 'HOTEL_DELETE_FAIL':
+            return {
+                ...state,
+                loading: false,
+                error: action.payload
+            }
+        default:
+            return state;
+    }
+}

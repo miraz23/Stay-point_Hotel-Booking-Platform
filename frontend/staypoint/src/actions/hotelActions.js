@@ -104,3 +104,21 @@ export const deleteRoom = (roomId) => async (dispatch) => {
         throw error
     }
 }
+
+export const deleteHotel = (hotelId) => async (dispatch) => {
+    try {
+        const token = localStorage.getItem('token')
+        await axios.delete(
+            `http://127.0.0.1:8000/api/hotels/${hotelId}/delete/`,
+            {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            }
+        )
+        dispatch({ type: 'HOTEL_DELETE_SUCCESS' })
+    } catch (error) {
+        dispatch({ type: 'HOTEL_DELETE_FAIL', payload: error.response?.data?.detail || error.message })
+        throw error
+    }
+}

@@ -14,6 +14,7 @@ urlpatterns = [
     path('hotels/<int:pk>/', views.getHotel,name="getHotel"),
     path('hotels/add-hotel/', views.addHotel, name="addHotel"),
     path('hotels/<int:pk>/update/', views.updateHotel, name="updateHotel"),
+    path('hotels/<int:pk>/delete/', views.deleteHotel, name="deleteHotel"),
     path('rooms/add-room/', views.addRoom, name="addRoom"),
     path('rooms/<int:pk>/update/', views.updateRoom, name="updateRoom"),
     path('rooms/<int:pk>/delete/', views.deleteRoom, name="deleteRoom"),
