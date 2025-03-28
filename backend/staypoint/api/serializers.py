@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Hotel, Room
+from .models import Hotel, Room, Booking
 from django.contrib.auth.models import User
 from rest_framework_simplejwt.tokens import RefreshToken
 
@@ -77,3 +77,27 @@ class RoomSerializer(serializers.ModelSerializer):
     class Meta:
         model = Room
         fields = '__all__'
+
+class BookingSerializer(serializers.ModelSerializer):
+    user_name = serializers.CharField(source='user.get_full_name', read_only=True)
+    user_email = serializers.EmailField(source='user.email', read_only=True)
+    user_contact = serializers.CharField(source='user.profile.contact_no', read_only=True)
+    user_address = serializers.CharField(source='user.profile.address', read_only=True)
+    user_nid = serializers.CharField(source='user.profile.nid_number', read_only=True)
+    user_image = serializers.ImageField(source='user.profile.image', read_only=True)
+    hotel_name = serializers.CharField(source='hotel.name', read_only=True)
+    hotel_location = serializers.CharField(source='hotel.location', read_only=True)
+    room_name = serializers.CharField(source='room.name', read_only=True)
+    room_type = serializers.CharField(source='room.type', read_only=True)
+    room_guests = serializers.IntegerField(source='room.guests', read_only=True)
+    room_bed_config = serializers.CharField(source='room.bed_config', read_only=True)
+    room_price = serializers.DecimalField(source='room.price', max_digits=10, decimal_places=2, read_only=True)
+
+    class Meta:
+        model = Booking
+        fields = [
+            'id', 'user', 'hotel', 'room', 'check_in_date', 'check_out_date', 
+            'user_name', 'user_email', 'user_contact',
+            'user_address', 'user_nid', 'user_image', 'hotel_name', 'hotel_location',
+            'room_name', 'room_type', 'room_guests', 'room_bed_config', 'room_price'
+        ]

@@ -1,8 +1,8 @@
 from django.shortcuts import render
 from rest_framework.response import Response
 from rest_framework.decorators import api_view, permission_classes
-from .models import UserDetails, Hotel, Room
-from .serializers import HotelSerializer, UserSerializer, RoomSerializer
+from .models import UserDetails, Hotel, Room, Booking
+from .serializers import HotelSerializer, UserSerializer, RoomSerializer, BookingSerializer
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework_simplejwt.views import TokenObtainPairView
 from .serializers import UserSerializer
@@ -19,6 +19,7 @@ from django.conf import settings
 from rest_framework import status
 from django.views import View
 import threading, json
+from datetime import datetime
 
 # Create your views here.
 
@@ -356,5 +357,43 @@ def deleteHotel(request, pk):
 
     except Hotel.DoesNotExist:
         return Response({"detail": "Hotel not found"}, status=status.HTTP_404_NOT_FOUND)
+    except Exception as e:
+        return Response({'detail': str(e)}, status=status.HTTP_400_BAD_REQUEST)
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def createBooking(request):
+    try:
+        data = request.data
+        room = Room.objects.get(id=data['roomId'])
+        hotel = Hotel.objects.get(id=data['hotelId'])
+
+        # Check if dates are valid
+        check_in = datetime.strptime(data['checkIn'], '%Y-%m-%d').date()
+        check_out = datetime.strptime(data['checkOut'], '%Y-%m-%d').date()
+
+        if check_in >= check_out:
+            return Response({"detail": "Check-out date must be after check-in date"}, 
+                          status=status.HTTP_400_BAD_REQUEST)
+
+        if check_in < datetime.now().date():
+            return Response({"detail": "Check-in date cannot be in the past"}, 
+                          status=status.HTTP_400_BAD_REQUEST)
+
+        # Create the booking
+        booking = Booking.objects.create(
+            user=request.user,
+            hotel=hotel,
+            room=room,
+            check_in_date=check_in,
+            check_out_date=check_out
+        )
+
+        serializer = BookingSerializer(booking, many=False)
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+    except (Room.DoesNotExist, Hotel.DoesNotExist):
+        return Response({"detail": "Room or Hotel not found"}, 
+                      status=status.HTTP_404_NOT_FOUND)
     except Exception as e:
         return Response({'detail': str(e)}, status=status.HTTP_400_BAD_REQUEST)

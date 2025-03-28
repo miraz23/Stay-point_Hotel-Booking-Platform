@@ -60,3 +60,14 @@ class Room(models.Model):
 
     def __str__(self):
         return f"{self.name} - {self.hotel.name}"
+
+
+class Booking(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    hotel = models.ForeignKey(Hotel, on_delete=models.CASCADE)
+    room = models.ForeignKey(Room, on_delete=models.CASCADE)
+    check_in_date = models.DateField()
+    check_out_date = models.DateField()
+
+    def __str__(self):
+        return f"{self.user.username} - {self.hotel.name} - {self.room.name}"

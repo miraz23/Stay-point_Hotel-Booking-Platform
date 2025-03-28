@@ -1,25 +1,39 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import { listHotelDetails } from '../actions/hotelActions';
 import Loader from './Loader';
 import Message from './Message';
 import { MapPinIcon, StarIcon } from '@heroicons/react/24/solid';
 import { IconClock, IconBellQuestion, IconWifi, IconSwimming, IconAirConditioning, IconCar, IconBarbell, IconToolsKitchen3, IconBed, IconUsers, IconAdjustmentsHorizontal, IconCalendarCheck, IconCalendarPlus } from '@tabler/icons-react';
+import axios from 'axios';
+import { toast } from 'react-hot-toast';
 
 const Hotel = () => {
     const { id } = useParams();
+    const navigate = useNavigate();
     const dispatch = useDispatch();
-    const [checkInDate, setCheckInDate] = useState('');
-    const [checkOutDate, setCheckOutDate] = useState('');
+    const [roomDates, setRoomDates] = useState({});
 
     const hotelDetails = useSelector(state => state.hotelDetails);
     const { loading, error, hotel } = hotelDetails;
+    const userLogin = useSelector(state => state.userLogin);
+    const { userInfo } = userLogin;
 
     useEffect(() => {
         dispatch(listHotelDetails(id));
         window.scrollTo(0, 0);
     }, [dispatch, id]);
+
+    const handleDateChange = (roomId, dateType, value) => {
+        setRoomDates(prev => ({
+            ...prev,
+            [roomId]: {
+                ...prev[roomId],
+                [dateType]: value
+            }
+        }));
+    };
 
     const amenityIcons = {
       "Room service": <IconBellQuestion  />,
@@ -41,6 +55,39 @@ const Hotel = () => {
     const date = new Date();
     date.setHours(hours, minutes);
     return date.toLocaleString("en-US", { hour: "numeric", minute: "2-digit", hour12: true });
+  };
+
+  const handleBooking = async (roomId) => {
+    if (!userInfo) {
+        toast.error('Please login to make a booking');
+        return;
+    }
+
+    try {
+        const config = {
+            headers: {
+                'Content-Type': 'application/json',
+                Authorization: `Bearer ${userInfo.token}`,
+            },
+        };
+
+        const { data } = await axios.post(
+            'http://127.0.0.1:8000/api/bookings/create/',
+            {
+                roomId,
+                hotelId: hotel.id,
+                checkIn: roomDates[roomId].checkIn,
+                checkOut: roomDates[roomId].checkOut,
+            },
+            config
+        );
+
+        toast.success('Booking created successfully!');
+        setRoomDates({});
+        navigate('/auth/profile');
+    } catch (error) {
+        toast.error(error.response?.data?.detail || 'Error creating booking');
+    }
   };
 
   return (
@@ -159,28 +206,23 @@ const Hotel = () => {
                         <div className='flex gap-4 pb-5 text-left text-gray-600'>
                           <div className='flex-1'>
                             <label className="block text-gray-700 text-sm font-semibold mb-2">Check-in</label>
-                            <input type="date" value={checkInDate} onChange={(e) => setCheckInDate(e.target.value)} min={new Date().toISOString().split('T')[0]} className="w-full px-4 py-2 border border-gray-300 rounded-lg"/>
+                            <input type="date" value={roomDates[room.id]?.checkIn || ''} onChange={(e) => handleDateChange(room.id, 'checkIn', e.target.value)}  min={new Date().toISOString().split('T')[0]}  className="w-full px-4 py-2 border border-gray-300 rounded-lg" />
                           </div>
                           <div className='flex-1'>
                             <label className="block text-gray-700 text-sm font-semibold mb-2">Check-out</label>
-                            <input type="date" value={checkOutDate} onChange={(e) => setCheckOutDate(e.target.value)} min={checkInDate || new Date().toISOString().split('T')[0]} className="w-full px-4 py-2 border border-gray-300 rounded-lg"/>
+                            <input type="date" value={roomDates[room.id]?.checkOut || ''} onChange={(e) => handleDateChange(room.id, 'checkOut', e.target.value)}  min={roomDates[room.id]?.checkIn || new Date().toISOString().split('T')[0]}  className="w-full px-4 py-2 border border-gray-300 rounded-lg" />
                           </div>
                         </div>
                         <div className='w-full flex gap-2'>
                           <button 
-                            className={`w-full px-6 py-2 text-white text-md font-semibold rounded-lg shadow-md ${!checkInDate || !checkOutDate ? 'bg-gray-400 cursor-not-allowed' : 'bg-cyan-500 hover:opacity-90 transition cursor-pointer'} flex items-center justify-center gap-2`}
-                            disabled={!checkInDate || !checkOutDate}
-                            onClick={() => {
-                              console.log('Booking for:', {
-                                checkIn: checkInDate,
-                                checkOut: checkOutDate,
-                                roomId: room.id,
-                                hotelId: hotel.id
-                              });
-                            }}>
+                            className={`w-full px-6 py-2 text-white text-md font-semibold rounded-lg shadow-md ${!roomDates[room.id]?.checkIn || !roomDates[room.id]?.checkOut ? 'bg-gray-400 cursor-not-allowed' : 'bg-cyan-500 hover:opacity-90 transition cursor-pointer'} flex items-center justify-center gap-2`}
+                            disabled={!roomDates[room.id]?.checkIn || !roomDates[room.id]?.checkOut}
+                            onClick={() => handleBooking(room.id)}>
                             <IconCalendarPlus size={20} />
-                            {checkInDate && checkOutDate ? `Book for ${checkInDate} - ${checkOutDate}` : 'Select dates to book'}
-                          </button>
+                            {roomDates[room.id]?.checkIn && roomDates[room.id]?.checkOut 
+                                ? `Book for ${roomDates[room.id].checkIn} - ${roomDates[room.id].checkOut}` 
+                                : 'Select dates to book'}
+                        </button>
                         </div>
                       </div>
                       ))}
