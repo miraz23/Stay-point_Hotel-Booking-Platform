@@ -10,6 +10,7 @@ import { Link } from 'react-router-dom';
 import AddRoom from '../components/AddRoom'
 import UpdateHotel from '../components/UpdateHotel'
 import EditRoom from '../components/EditRoom'
+import HotelBookings from '../components/HotelBookings'
 import { deleteRoom } from '../actions/hotelActions';
 import { toast } from 'react-hot-toast';
 
@@ -217,6 +218,9 @@ const HotelDashboard = () => {
           {isAddingRoom && <AddRoom setisAddingRoom={setisAddingRoom} isOpen={isAddingRoom} hotelId={hotel.id} />}
           {isUpdatingHotel && <UpdateHotel setIsUpdatingHotel={setIsUpdatingHotel} isOpen={isUpdatingHotel} hotel={hotel} setHotel={(updatedHotel) => dispatch({ type: 'HOTEL_DETAILS_SUCCESS', payload: updatedHotel })} />}
           {isEditingRoom && <EditRoom setIsEditingRoom={setIsEditingRoom} isOpen={isEditingRoom} room={selectedRoom} hotelId={hotel.id} />}
+          
+          {/* Hotel Bookings Component */}
+          <HotelBookings hotelId={id} />
       </div>
   );
 };

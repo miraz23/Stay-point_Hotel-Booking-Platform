@@ -484,3 +484,23 @@ def searchHotels(request):
 
     except Exception as e:
         return Response({'detail': str(e)}, status=status.HTTP_400_BAD_REQUEST)
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def getHotelBookings(request, pk):
+    try:
+        hotel = Hotel.objects.get(id=pk)
+        
+        # Check if the user owns this hotel
+        if hotel.user != request.user:
+            return Response({"detail": "You don't have permission to view these bookings"}, status=status.HTTP_403_FORBIDDEN)
+
+        # Get all bookings for this hotel's rooms
+        bookings = Booking.objects.filter(hotel=hotel)
+        serializer = BookingSerializer(bookings, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+    except Hotel.DoesNotExist:
+        return Response({"detail": "Hotel not found"}, status=status.HTTP_404_NOT_FOUND)
+    except Exception as e:
+        return Response({'detail': str(e)}, status=status.HTTP_400_BAD_REQUEST)
