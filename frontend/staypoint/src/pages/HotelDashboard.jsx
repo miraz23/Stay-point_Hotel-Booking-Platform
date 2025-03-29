@@ -76,96 +76,97 @@ const HotelDashboard = () => {
   }
 
   return (
-      <div className="text-center my-30 mx-10">
+      <div className="text-center my-30 mx-4 md:mx-10">
           {loading ? (
               <Loader />
           ) : error ? (
               <Message variant='danger'>{error}</Message>
           ) : (
             <div>
-              <div className="mt-10">
+              <div className="mt-6 md:mt-10">
                 <HotelAnalytics hotelId={id} />
               </div>
 
-              <div className='w-full flex gap-x-10'>
-                  <div className='w-1/2 aspect-[3/2]'>
+              <div className='w-full flex flex-col md:flex-row gap-4 md:gap-x-10 mt-6 md:mt-10'>
+                  <div className='w-full md:w-1/2 aspect-[3/2]'>
                       {hotel.image ? (
                           <img src={`http://127.0.0.1:8000/${hotel.image}`} alt={hotel.name} className="w-full h-full object-cover rounded-lg" />
                       ) : (
                           <img src="/default-hotel.jpg" alt={hotel.name} className="w-full h-full object-cover rounded-lg" />
                       )}
                   </div>
-                  <div className='w-1/2 text-left'>
+                  <div className='w-full md:w-1/2 text-left'>
                     <div className='flex items-center justify-between pb-2'>
                       <div className='w-full'>
-                          <div className='flex justify-between'>
+                          <div className='flex flex-col md:flex-row justify-between gap-2 md:gap-0'>
                             <div className='flex items-center'>
-                              <h1 className='text-4xl font-semibold'>{hotel.name}</h1>
+                              <h1 className='text-2xl md:text-4xl font-semibold'>{hotel.name}</h1>
                               <button onClick={() => setIsUpdatingHotel(true)} className="text-cyan-500 cursor-pointer hover:text-cyan-600 transition-colors p-2 rounded-md relative" title="Update Hotel">
                                 <IconEdit size={28} />
                               </button>
                             </div>
                             <div className="flex items-center">
                               <StarIcon className="h-5 w-5 text-yellow-500 mr-2"/>
-                              <span className="text-gray-600 text-2xl font-semibold">{hotel.rating}</span>
+                              <span className="text-gray-600 text-xl md:text-2xl font-semibold">{hotel.rating}</span>
                             </div>
                           </div>
-                          <div className="flex items-center py-3">
-                            <MapPinIcon className="h-6 w-6 text-cyan-500 mr-2" />
-                            <span className="text-gray-600">{hotel.location}</span>
+                          <div className="flex items-center py-2 md:py-3">
+                            <MapPinIcon className="h-5 w-5 md:h-6 md:w-6 text-cyan-500 mr-2" />
+                            <span className="text-gray-600 text-sm md:text-base">{hotel.location}</span>
                           </div>
                       </div>
                     </div>
-                    <div className='border-1 border-gray-300 rounded-xl p-5'>
-                      <div className='pb-5 border-b-1 border-gray-300'>
-                        <h1 className='text-gray-700 text-xl mb-2 font-semibold'>About</h1>
-                        <p className='text-[16px]'>{hotel.description}</p>
+                    <div className='border-1 border-gray-300 rounded-xl p-4 md:p-5'>
+                      <div className='pb-4 md:pb-5 border-b-1 border-gray-300'>
+                        <h1 className='text-gray-700 text-lg md:text-xl mb-2 font-semibold'>About</h1>
+                        <p className='text-sm md:text-[16px]'>{hotel.description}</p>
                       </div>
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <div className="flex items-center pt-5">
+                        <div className="flex items-center pt-4 md:pt-5">
                           <IconClock className='mr-2' />
                           <div>
-                            <p className="text-md text-muted-foreground">Check-in</p>
-                            <p className="text-md font-medium">{formatTime(hotel.check_in_time)}</p>
+                            <p className="text-sm md:text-md text-muted-foreground">Check-in</p>
+                            <p className="text-sm md:text-md font-medium">{formatTime(hotel.check_in_time)}</p>
                           </div>
                         </div>
-                        <div className="flex items-center pt-5">
+                        <div className="flex items-center pt-4 md:pt-5">
                           <IconClock className='mr-2' />
                           <div>
-                            <p className="text-md text-muted-foreground">Check-out</p>
-                            <p className="text-md font-medium">{formatTime(hotel.check_out_time)}</p>
+                            <p className="text-sm md:text-md text-muted-foreground">Check-out</p>
+                            <p className="text-sm md:text-md font-medium">{formatTime(hotel.check_out_time)}</p>
                           </div>
                         </div>
                       </div>
                     </div>
                   </div>
               </div>
-              <div className='mt-10 border-1 border-gray-300 rounded-xl p-5'>
+              <div className='mt-6 md:mt-10 border-1 border-gray-300 rounded-xl p-4 md:p-5'>
                 <div>
-                  <h1 className='text-gray-700 text-left text-xl pb-5 font-semibold'>Popular Amenities</h1>
-                  <div className='grid grid-cols-2 md:grid-cols-4 gap-4'>
+                  <h1 className='text-gray-700 text-left text-lg md:text-xl pb-4 md:pb-5 font-semibold'>Popular Amenities</h1>
+                  <div className='grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4'>
                     {hotel.amenities && hotel.amenities.length > 0 && hotel.amenities.map((amenity, index) => (
                       <div key={index} className='flex items-center'>
                         <span className='bg-slate-200 p-2 rounded-full mr-2'>{amenityIcons[amenity]}</span>
-                        <span className='text-gray-700'>{amenity}</span>
+                        <span className='text-gray-700 text-sm md:text-base'>{amenity}</span>
                       </div>
                     ))}
                   </div>
                 </div>
               </div>
-              <div className='mt-10 border-1 border-gray-300 rounded-xl p-5'>
+
+              <div className='mt-6 md:mt-10 border-1 border-gray-300 rounded-xl p-4 md:p-5'>
                 <div>
-                  <div className='flex justify-between items-center'>
-                    <h1 className='text-gray-700 text-left text-xl font-semibold'>Rooms</h1>
-                    <button onClick={() => setisAddingRoom(true)} className="flex items-center justify-center px-4 py-2 bg-cyan-500 text-white font-semibold rounded-lg shadow-md hover:opacity-90 transition cursor-pointer">
+                  <div className='flex flex-col md:flex-row justify-between items-start md:items-center gap-4 md:gap-0'>
+                    <h1 className='text-gray-700 text-left text-lg md:text-xl font-semibold'>Rooms</h1>
+                    <button onClick={() => setisAddingRoom(true)} className="flex items-center justify-center px-4 py-2 bg-cyan-500 text-white text-sm md:text-base font-semibold rounded-lg shadow-md hover:opacity-90 transition cursor-pointer">
                       <IconCirclePlus className="mr-1" /> Add Room
                     </button>
                   </div>
                   {hotel.rooms && hotel.rooms.length > 0 ? (
-                    <div className='flex gap-5 mt-5 flex-wrap'>
+                    <div className='flex gap-4 md:gap-5 mt-5 flex-wrap'>
                       {hotel.rooms.map((room) => (
-                      <div className="w-full md:w-[calc(50%-12px)] flex flex-col justify-between border-1 border-gray-200 rounded-lg p-4 bg-white shadow-2xl" key={room.id}>
-                        <div className="flex flex-col justify-center items-center mb-4">
+                      <div className="w-full md:w-[calc(50%-12px)] flex flex-col justify-between border-1 border-gray-200 rounded-lg p-3 md:p-4 bg-white shadow-2xl" key={room.id}>
+                        <div className="flex flex-col justify-center items-center mb-3 md:mb-4">
                             <div className="aspect-[3/2] flex items-center justify-center rounded-xl">
                                 {room.image ? (
                                     <img className="w-full h-full object-cover rounded-xl" src={`http://127.0.0.1:8000/${room.image}`} alt={room.name} />
@@ -174,24 +175,24 @@ const HotelDashboard = () => {
                                 )}
                             </div>
                         </div>
-                        <div className="flex justify-between mb-5">
+                        <div className="flex justify-between mb-4 md:mb-5">
                             <div className="flex items-center">
-                              <h1 className="text-xl font-bold text-gray-700">{room.name}</h1>
+                              <h1 className="text-lg md:text-xl font-bold text-gray-700">{room.name}</h1>
                             </div>
                             <div className="flex items-center">
-                                <span className="text-cyan-600 font-bold">${room.price}</span>
+                                <span className="text-cyan-600 font-bold text-lg md:text-xl">${room.price}</span>
                             </div>
                         </div>
-                        <div className="grid md:grid-cols-2 lg:grid-cols-4 mb-5">
-                            <span className="flex text-gray-600 text-sm font-semibold items-center"><IconUsers size={20} className='mr-1'/> {room.guests} Guests</span>
-                            <span className="flex text-gray-600 text-sm font-semibold items-center"><IconAdjustmentsHorizontal size={20} className='mr-1'/> {room.type} Room</span>
-                            <span className="flex text-gray-600 text-sm font-semibold items-center"><IconBed size={22} className='mr-1'/> {room.bed_config} Bed</span>
-                            <span className="flex text-gray-600 text-sm font-semibold items-center"><IconCalendarCheck size={22} className='mr-1'/> {room.total_rooms} Rooms</span>
+                        <div className="grid grid-cols-2 lg:grid-cols-4 gap-2 md:gap-4 mb-4 md:mb-5 text-left">
+                            <span className="flex text-gray-600 text-xs md:text-sm font-semibold items-center"><IconUsers size={16} className='mr-1'/> {room.guests} Guests</span>
+                            <span className="flex text-gray-600 text-xs md:text-sm font-semibold items-center"><IconAdjustmentsHorizontal size={16} className='mr-1'/> {room.type} Room</span>
+                            <span className="flex text-gray-600 text-xs md:text-sm font-semibold items-center"><IconBed size={18} className='mr-1'/> {room.bed_config} Bed</span>
+                            <span className="flex text-gray-600 text-xs md:text-sm font-semibold items-center"><IconCalendarCheck size={18} className='mr-1'/> {room.total_rooms} Rooms</span>
                         </div>
                         <div>
-                          <p className='text-gray-600 text-left'>{room.description}</p>
+                          <p className='text-gray-600 text-left text-sm md:text-base'>{room.description}</p>
                         </div>
-                        <div className='grid grid-cols-2 md:grid-cols-4 gap-4 my-5'>
+                        <div className='grid grid-cols-2 md:grid-cols-4 gap-2 md:gap-4 my-4 md:my-5'>
                           {room.amenities.map((amenity, index) => (
                             <div key={index} className='flex items-center justify-center bg-gray-100 text-xs rounded-xl py-1'>
                               <span className='text-gray-700'>{amenity}</span>
@@ -199,20 +200,20 @@ const HotelDashboard = () => {
                           ))}
                         </div>
                         <div className='w-full flex gap-2'>
-                          <div className='border-1 border-gray-300 w-1/2 py-2 text-gray-600 cursor-pointer hover:bg-gray-100 flex items-center justify-center'onClick={() => handleEditRoom(room)}>
-                            <IconEdit size={20} className="mr-1" /> Edit
+                          <div className='border-1 border-gray-300 w-1/2 py-2 text-gray-600 cursor-pointer hover:bg-gray-100 flex items-center justify-center text-sm md:text-base'onClick={() => handleEditRoom(room)}>
+                            <IconEdit size={16} className="mr-1" /> Edit
                           </div>
-                          <div className='border-1 border-gray-300 w-1/2 py-2 text-red-500 cursor-pointer hover:bg-red-50 flex items-center justify-center'onClick={() => handleDeleteRoom(room.id)}>
-                            <IconTrash size={20} className="mr-1" /> Delete
+                          <div className='border-1 border-gray-300 w-1/2 py-2 text-red-500 cursor-pointer hover:bg-red-50 flex items-center justify-center text-sm md:text-base'onClick={() => handleDeleteRoom(room.id)}>
+                            <IconTrash size={16} className="mr-1" /> Delete
                           </div>
                         </div>
                       </div>
                       ))}
                     </div>
                   ) : (
-                    <div className='flex flex-col justify-center items-center p-10'>
-                      <IconBed size={128} className='text-gray-300' />
-                      <p className='text-xl text-gray-400'>No rooms added yet. Click "Add Room" to get started.</p>
+                    <div className='flex flex-col justify-center items-center p-6 md:p-10'>
+                      <IconBed size={96} className='text-gray-300 md:size-128' />
+                      <p className='text-lg md:text-xl text-gray-400'>No rooms added yet. Click "Add Room" to get started.</p>
                     </div>
                   )}
                 </div>
