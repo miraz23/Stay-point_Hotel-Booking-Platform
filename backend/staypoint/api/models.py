@@ -37,7 +37,7 @@ class Hotel(models.Model):
     description = models.TextField()
     location = models.CharField(max_length=255)
     rating = models.FloatField()
-    image = models.ImageField(upload_to='hotels/', null=True, blank=True)
+    image = models.ImageField(upload_to='hotel_images/', null=True, blank=True)
     check_in_time = models.TimeField(default="12:00")
     check_out_time = models.TimeField(default="10:00")
     amenities = models.JSONField(default=list)
@@ -57,7 +57,7 @@ class Room(models.Model):
     booked_rooms = models.PositiveIntegerField(default=0)
     description = models.TextField()
     amenities = models.JSONField(default=list)
-    image = models.ImageField(upload_to='rooms/', blank=True, null=True)
+    image = models.ImageField(upload_to='room_images/', blank=True, null=True)
 
     def __str__(self):
         return f"{self.name} - {self.hotel.name}"

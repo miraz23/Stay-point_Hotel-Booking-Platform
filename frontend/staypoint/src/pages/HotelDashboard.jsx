@@ -11,6 +11,7 @@ import AddRoom from '../components/AddRoom'
 import UpdateHotel from '../components/UpdateHotel'
 import EditRoom from '../components/EditRoom'
 import HotelBookings from '../components/HotelBookings'
+import HotelAnalytics from '../components/HotelAnalytics'
 import { deleteRoom } from '../actions/hotelActions';
 import { toast } from 'react-hot-toast';
 
@@ -82,6 +83,10 @@ const HotelDashboard = () => {
               <Message variant='danger'>{error}</Message>
           ) : (
             <div>
+              <div className="mt-10">
+                <HotelAnalytics hotelId={id} />
+              </div>
+
               <div className='w-full flex gap-x-10'>
                   <div className='w-1/2 aspect-[3/2]'>
                       {hotel.image ? (

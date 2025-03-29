@@ -19,7 +19,7 @@ from django.conf import settings
 from rest_framework import status
 from django.views import View
 import threading, json
-from datetime import datetime
+from datetime import datetime, timedelta
 
 # Create your views here.
 
@@ -499,6 +499,75 @@ def getHotelBookings(request, pk):
         bookings = Booking.objects.filter(hotel=hotel)
         serializer = BookingSerializer(bookings, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
+
+    except Hotel.DoesNotExist:
+        return Response({"detail": "Hotel not found"}, status=status.HTTP_404_NOT_FOUND)
+    except Exception as e:
+        return Response({'detail': str(e)}, status=status.HTTP_400_BAD_REQUEST)
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def getHotelAnalytics(request, pk):
+    try:
+        hotel = Hotel.objects.get(id=pk)
+        
+        # Check if the user owns this hotel
+        if hotel.user != request.user:
+            return Response({"detail": "You don't have permission to view these analytics"}, 
+                          status=status.HTTP_403_FORBIDDEN)
+
+        # Get all bookings for this hotel
+        bookings = Booking.objects.filter(hotel=hotel)
+        
+        # Calculate total revenue
+        total_revenue = sum(booking.room.price * (booking.check_out_date - booking.check_in_date).days 
+                          for booking in bookings)
+        
+        # Get bookings from last year for comparison
+        last_year = datetime.now() - timedelta(days=365)
+        last_year_bookings = bookings.filter(check_in_date__gte=last_year)
+        last_year_revenue = sum(booking.room.price * (booking.check_out_date - booking.check_in_date).days 
+                              for booking in last_year_bookings)
+        
+        # Calculate revenue change percentage
+        revenue_change = ((total_revenue - last_year_revenue) / last_year_revenue * 100 
+                        if last_year_revenue > 0 else 0)
+        
+        # Calculate total bookings and change
+        total_bookings = bookings.count()
+        last_year_total_bookings = last_year_bookings.count()
+        bookings_change = ((total_bookings - last_year_total_bookings) / last_year_total_bookings * 100 
+                          if last_year_total_bookings > 0 else 0)
+        
+        # Calculate average occupancy
+        total_rooms = sum(room.total_rooms for room in hotel.rooms.all())
+        booked_rooms = sum(room.booked_rooms for room in hotel.rooms.all())
+        avg_occupancy = (booked_rooms / total_rooms * 100) if total_rooms > 0 else 0
+        
+        # Calculate occupancy change (comparing with last month)
+        last_month = datetime.now() - timedelta(days=30)
+        last_month_bookings = bookings.filter(check_in_date__gte=last_month)
+        last_month_booked_rooms = sum(1 for _ in last_month_bookings)
+        last_month_occupancy = (last_month_booked_rooms / total_rooms * 100) if total_rooms > 0 else 0
+        occupancy_change = ((avg_occupancy - last_month_occupancy) / last_month_occupancy * 100 
+                          if last_month_occupancy > 0 else 0)
+        
+        # Get average rating and change
+        avg_rating = hotel.rating or 0
+        rating_change = 0.3  # Placeholder for rating change
+        
+        analytics_data = {
+            'totalRevenue': float(total_revenue),
+            'totalBookings': total_bookings,
+            'avgOccupancy': round(avg_occupancy, 1),
+            'avgRating': round(avg_rating, 1),
+            'revenueChange': round(revenue_change, 1),
+            'bookingsChange': round(bookings_change, 1),
+            'occupancyChange': round(occupancy_change, 1),
+            'ratingChange': rating_change
+        }
+        
+        return Response(analytics_data, status=status.HTTP_200_OK)
 
     except Hotel.DoesNotExist:
         return Response({"detail": "Hotel not found"}, status=status.HTTP_404_NOT_FOUND)
