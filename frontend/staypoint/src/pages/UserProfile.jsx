@@ -8,6 +8,7 @@ import ListHotel from "../components/ListHotel"
 import UpdateProfile from "../components/UpdateProfile"
 import UserListedHotels from "../components/UserListedHotels"
 import UserDetails from "../components/UserDetails"
+import UserBookings from "../components/UserBookings"
 
 export default function UserProfile() {
   const [user, setUser] = useState(null)
@@ -78,6 +79,9 @@ export default function UserProfile() {
           hotels={hotels || []} 
         />
       }
+
+      {/* User Bookings Component */}
+      <UserBookings />
     </div>
   )
 }
