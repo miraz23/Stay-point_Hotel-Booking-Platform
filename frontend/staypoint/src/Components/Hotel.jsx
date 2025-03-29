@@ -191,7 +191,7 @@ const Hotel = () => {
                             <span className="flex text-gray-600 text-sm font-semibold items-center"><IconUsers size={20} className='mr-1'/> {room.guests} Guests</span>
                             <span className="flex text-gray-600 text-sm font-semibold items-center"><IconAdjustmentsHorizontal size={20} className='mr-1'/> {room.type} Room</span>
                             <span className="flex text-gray-600 text-sm font-semibold items-center"><IconBed size={22} className='mr-1'/> {room.bed_config} Bed</span>
-                            <span className="flex text-gray-600 text-sm font-semibold items-center"><IconCalendarCheck size={22} className='mr-1'/> {room.num_rooms} Rooms</span>
+                            <span className="flex text-gray-600 text-sm font-semibold items-center"><IconCalendarCheck size={22} className='mr-1'/> {room.total_rooms} Available</span>
                         </div>
                         <div>
                           <p className='text-gray-600 text-left'>{room.description}</p>
@@ -215,13 +215,15 @@ const Hotel = () => {
                         </div>
                         <div className='w-full flex gap-2'>
                           <button 
-                            className={`w-full px-6 py-2 text-white text-md font-semibold rounded-lg shadow-md ${!roomDates[room.id]?.checkIn || !roomDates[room.id]?.checkOut ? 'bg-gray-400 cursor-not-allowed' : 'bg-cyan-500 hover:opacity-90 transition cursor-pointer'} flex items-center justify-center gap-2`}
-                            disabled={!roomDates[room.id]?.checkIn || !roomDates[room.id]?.checkOut}
+                            className={`w-full px-6 py-2 text-white text-md font-semibold rounded-lg shadow-md ${!roomDates[room.id]?.checkIn || !roomDates[room.id]?.checkOut || room.total_rooms <= 0 ? 'bg-gray-400 cursor-not-allowed' : 'bg-cyan-500 hover:opacity-90 transition cursor-pointer'} flex items-center justify-center gap-2`}
+                            disabled={!roomDates[room.id]?.checkIn || !roomDates[room.id]?.checkOut || room.total_rooms <= 0}
                             onClick={() => handleBooking(room.id)}>
                             <IconCalendarPlus size={20} />
-                            {roomDates[room.id]?.checkIn && roomDates[room.id]?.checkOut 
-                                ? `Book for ${roomDates[room.id].checkIn} - ${roomDates[room.id].checkOut}` 
-                                : 'Select dates to book'}
+                            {room.total_rooms <= 0 
+                              ? 'No rooms available' 
+                              : !roomDates[room.id]?.checkIn || !roomDates[room.id]?.checkOut 
+                                ? 'Select dates to book' 
+                                : `Book for ${roomDates[room.id].checkIn} - ${roomDates[room.id].checkOut}`}
                         </button>
                         </div>
                       </div>

@@ -240,7 +240,7 @@ def addRoom(request):
             bed_config=data['bedConfig'],
             guests=int(data['guests']),
             price=float(data['price']),
-            num_rooms=int(data['numRooms']),
+            total_rooms=int(data['totalRooms']),
             description=data['description'],
             amenities=amenities,
             image=image,
@@ -306,7 +306,7 @@ def updateRoom(request, pk):
         room.bed_config = data.get('bedConfig', room.bed_config)
         room.guests = int(data.get('guests', room.guests))
         room.price = float(data.get('price', room.price))
-        room.num_rooms = int(data.get('numRooms', room.num_rooms))
+        room.total_rooms = int(data.get('totalRooms', room.total_rooms))
         room.description = data.get('description', room.description)
         room.amenities = json.loads(data.get('amenities', '[]'))
         
@@ -380,6 +380,11 @@ def createBooking(request):
             return Response({"detail": "Check-in date cannot be in the past"}, 
                           status=status.HTTP_400_BAD_REQUEST)
 
+        # Check if room is available
+        if room.total_rooms <= 0:
+            return Response({"detail": "No rooms available for booking"}, 
+                          status=status.HTTP_400_BAD_REQUEST)
+
         # Create the booking
         booking = Booking.objects.create(
             user=request.user,
@@ -388,6 +393,11 @@ def createBooking(request):
             check_in_date=check_in,
             check_out_date=check_out
         )
+
+        # Update room availability
+        room.total_rooms -= 1
+        room.booked_rooms += 1
+        room.save()
 
         serializer = BookingSerializer(booking, many=False)
         return Response(serializer.data, status=status.HTTP_201_CREATED)
@@ -417,6 +427,12 @@ def deleteBooking(request, pk):
         # Check if the user owns this booking
         if booking.user != request.user:
             return Response({"detail": "You don't have permission to delete this booking"}, status=status.HTTP_403_FORBIDDEN)
+
+        # Restore room availability before deleting the booking
+        room = booking.room
+        room.total_rooms += 1
+        room.booked_rooms -= 1
+        room.save()
 
         booking.delete()
         return Response({"detail": "Booking deleted successfully"}, status=status.HTTP_200_OK)

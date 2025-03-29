@@ -12,7 +12,7 @@ const schemaRoom = z.object({
   bedConfig: z.string().min(3, "Bed configuration is required"),
   guests: z.number().min(1, "At least 1 guest required"),
   price: z.number().min(1, "Price must be at least 1"),
-  numRooms: z.number().min(1, "At least 1 room required"),
+  totalRooms: z.number().min(1, "At least 1 room required"),
   description: z.string().min(5, "Description must be at least 5 characters"),
   amenities: z.array(z.string()).optional(),
   image: z.any().optional(),
@@ -35,7 +35,7 @@ export default function EditRoom({ isOpen, setIsEditingRoom, room, hotelId }) {
       bedConfig: room?.bed_config || "",
       guests: room?.guests || "",
       price: room?.price || "",
-      numRooms: room?.num_rooms || "",
+      totalRooms: room?.total_rooms || "",
       description: room?.description || "",
       amenities: room?.amenities || [],
       image: null,
@@ -98,7 +98,7 @@ export default function EditRoom({ isOpen, setIsEditingRoom, room, hotelId }) {
                 {errors.name && <p className="text-red-500 text-sm">{errors.name.message}</p>}
               </div>
               <div>
-                <input {...register("numRooms", { valueAsNumber: true })} className="block w-full rounded-lg border border-gray-300 px-4 py-2" type="number" placeholder="Number of Rooms"/>
+                <input {...register("totalRooms", { valueAsNumber: true })} className="block w-full rounded-lg border border-gray-300 px-4 py-2" type="number" placeholder="Number of Rooms"/>
               </div>
             </div>
             <div className="w-full flex gap-5">

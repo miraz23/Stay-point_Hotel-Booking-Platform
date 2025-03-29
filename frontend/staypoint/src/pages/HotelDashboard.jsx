@@ -180,7 +180,7 @@ const HotelDashboard = () => {
                             <span className="flex text-gray-600 text-sm font-semibold items-center"><IconUsers size={20} className='mr-1'/> {room.guests} Guests</span>
                             <span className="flex text-gray-600 text-sm font-semibold items-center"><IconAdjustmentsHorizontal size={20} className='mr-1'/> {room.type} Room</span>
                             <span className="flex text-gray-600 text-sm font-semibold items-center"><IconBed size={22} className='mr-1'/> {room.bed_config} Bed</span>
-                            <span className="flex text-gray-600 text-sm font-semibold items-center"><IconCalendarCheck size={22} className='mr-1'/> {room.num_rooms} Rooms</span>
+                            <span className="flex text-gray-600 text-sm font-semibold items-center"><IconCalendarCheck size={22} className='mr-1'/> {room.total_rooms} Rooms</span>
                         </div>
                         <div>
                           <p className='text-gray-600 text-left'>{room.description}</p>
