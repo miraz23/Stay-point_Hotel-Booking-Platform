@@ -30,7 +30,7 @@ const FeaturedHotels = () => {
               <p className="w-full text-lg text-gray-600 text-center italic">No featured hotels available.</p>
           ) : (
                 featuredHotels.map((hotel) => (
-                    <div className="w-full md:w-[calc(50%-12px)] lg:w-[calc(33.33%-12px)] flex flex-col border-2 border-[#fff] rounded-xl p-4 bg-white shadow-2xl" key={hotel.id}>
+                    <div className="w-full md:w-[calc(50%-12px)] lg:w-[calc(33.33%-12px)] flex flex-col justify-between border-2 border-[#fff] rounded-xl p-4 bg-white shadow-2xl" key={hotel.id}>
                         <div className="flex flex-col justify-center items-center mb-4">
                             <div className="aspect-[3/2] flex items-center justify-center rounded-xl">
                               {hotel.image ? (
@@ -44,7 +44,7 @@ const FeaturedHotels = () => {
                             </div>
                         </div>
                         <div className="flex justify-between mb-5">
-                            <div className="flex items-center">
+                            <div className="flex items-center text-left">
                                 <MapPinIcon className="h-6 w-6 text-blue-500 mr-2" />
                                 <span className="text-gray-600">{hotel.location}</span>
                             </div>

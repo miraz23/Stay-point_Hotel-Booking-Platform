@@ -441,3 +441,46 @@ def deleteBooking(request, pk):
         return Response({"detail": "Booking not found"}, status=status.HTTP_404_NOT_FOUND)
     except Exception as e:
         return Response({'detail': str(e)}, status=status.HTTP_400_BAD_REQUEST)
+
+@api_view(['GET'])
+def searchHotels(request):
+    location = request.GET.get('location', '')
+    check_in = request.GET.get('checkIn', '')
+    check_out = request.GET.get('checkOut', '')
+    guests = request.GET.get('guests', 1)
+
+    try:
+        # Convert string dates to datetime objects
+        check_in_date = datetime.strptime(check_in, '%Y-%m-%d').date()
+        check_out_date = datetime.strptime(check_out, '%Y-%m-%d').date()
+
+        # Get hotels matching the location
+        hotels = Hotel.objects.filter(location__icontains=location)
+        
+        # Filter hotels that have rooms available for the specified dates and guests
+        available_hotels = []
+        for hotel in hotels:
+            # Get all rooms that can accommodate the requested number of guests
+            potential_rooms = hotel.rooms.filter(guests__gte=guests)
+            
+            for room in potential_rooms:
+                # Get all bookings for this room
+                bookings = Booking.objects.filter(room=room)
+                
+                # Check if the room is available for the requested dates
+                is_available = True
+                for booking in bookings:
+                    # If there's any overlap between the requested dates and existing bookings
+                    if (check_in_date <= booking.check_out_date and check_out_date >= booking.check_in_date):
+                        is_available = False
+                        break
+                
+                if is_available:
+                    available_hotels.append(hotel)
+                    break  # Break once we find an available room for this hotel
+
+        serializer = HotelSerializer(available_hotels, many=True)
+        return Response(serializer.data)
+
+    except Exception as e:
+        return Response({'detail': str(e)}, status=status.HTTP_400_BAD_REQUEST)

@@ -60,10 +60,10 @@ export default function UserListedHotels({ user, hotels }) {
                 </span>
                 <div className="flex items-center text-gray-600 mt-2">
                   <span className="bg-gray-100 px-3 py-1 rounded-md text-sm font-medium shadow-inner">
-                    Total: {hotel.rooms.reduce((sum, room) => sum + room.total_rooms + room.booked_rooms, 0)} Rooms
+                    Total: {hotel.rooms.reduce((sum, room) => sum + room.total_rooms + room.booked_rooms, 0)} Room
                   </span>
                   <span className="bg-green-100 px-3 py-1 rounded-md text-sm font-medium shadow-inner ml-2">
-                    Available: {hotel.rooms.reduce((sum, room) => sum + room.total_rooms, 0)} Rooms
+                    Available: {hotel.rooms.reduce((sum, room) => sum + room.total_rooms, 0)} Room
                   </span>
                 </div>
               </div>

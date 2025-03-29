@@ -12,6 +12,7 @@ urlpatterns = [
     path('users/bookings/', views.getUserBookings, name="getUserBookings"),
 
     path('hotels/', views.getHotels,name="getHotels"),
+    path('hotels/search/', views.searchHotels, name="searchHotels"),
     path('hotels/<int:pk>/', views.getHotel,name="getHotel"),
     path('hotels/add-hotel/', views.addHotel, name="addHotel"),
     path('hotels/<int:pk>/update/', views.updateHotel, name="updateHotel"),
