@@ -92,6 +92,8 @@ class BookingSerializer(serializers.ModelSerializer):
     room_guests = serializers.IntegerField(source='room.guests', read_only=True)
     room_bed_config = serializers.CharField(source='room.bed_config', read_only=True)
     room_price = serializers.DecimalField(source='room.price', max_digits=10, decimal_places=2, read_only=True)
+    total_price = serializers.SerializerMethodField()
+    total_nights = serializers.SerializerMethodField()
 
     class Meta:
         model = Booking
@@ -99,5 +101,19 @@ class BookingSerializer(serializers.ModelSerializer):
             'id', 'user', 'hotel', 'room', 'check_in_date', 'check_out_date', 
             'user_name', 'user_email', 'user_contact',
             'user_address', 'user_nid', 'user_image', 'hotel_name', 'hotel_location',
-            'room_name', 'room_type', 'room_guests', 'room_bed_config', 'room_price'
+            'room_name', 'room_type', 'room_guests', 'room_bed_config', 'room_price',
+            'total_price', 'total_nights'
         ]
+
+    def get_total_price(self, obj):
+        from datetime import datetime
+        check_in = datetime.strptime(str(obj.check_in_date), '%Y-%m-%d')
+        check_out = datetime.strptime(str(obj.check_out_date), '%Y-%m-%d')
+        nights = (check_out - check_in).days
+        return float(obj.room.price) * nights
+
+    def get_total_nights(self, obj):
+        from datetime import datetime
+        check_in = datetime.strptime(str(obj.check_in_date), '%Y-%m-%d')
+        check_out = datetime.strptime(str(obj.check_out_date), '%Y-%m-%d')
+        return (check_out - check_in).days

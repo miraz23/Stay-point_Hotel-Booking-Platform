@@ -407,3 +407,21 @@ def getUserBookings(request):
         return Response(serializer.data, status=status.HTTP_200_OK)
     except Exception as e:
         return Response({'detail': str(e)}, status=status.HTTP_400_BAD_REQUEST)
+
+@api_view(['DELETE'])
+@permission_classes([IsAuthenticated])
+def deleteBooking(request, pk):
+    try:
+        booking = Booking.objects.get(id=pk)
+        
+        # Check if the user owns this booking
+        if booking.user != request.user:
+            return Response({"detail": "You don't have permission to delete this booking"}, status=status.HTTP_403_FORBIDDEN)
+
+        booking.delete()
+        return Response({"detail": "Booking deleted successfully"}, status=status.HTTP_200_OK)
+
+    except Booking.DoesNotExist:
+        return Response({"detail": "Booking not found"}, status=status.HTTP_404_NOT_FOUND)
+    except Exception as e:
+        return Response({'detail': str(e)}, status=status.HTTP_400_BAD_REQUEST)

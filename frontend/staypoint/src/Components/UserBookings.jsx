@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react"
 import axios from "axios"
 import { toast } from "react-hot-toast"
-import { IconMapPin, IconBed, IconUsers, IconHotelService, IconCalendarCheck, IconAdjustmentsHorizontal, IconWallet } from '@tabler/icons-react';
+import { IconMapPin, IconBed, IconUsers, IconHotelService, IconCalendarCheck, IconAdjustmentsHorizontal, IconCurrencyTaka, IconMoon, IconWallet } from '@tabler/icons-react';
 
 export default function UserBookings() {
   const [bookings, setBookings] = useState([])
@@ -22,11 +22,32 @@ export default function UserBookings() {
     if (token) fetchBookings()
   }, [token])
 
+  const handleCancelBooking = async (bookingId) => {
+    try {
+      await axios.delete(`http://127.0.0.1:8000/api/bookings/${bookingId}/delete/`, {
+        headers: { Authorization: `Bearer ${token}` },
+      })
+      toast.success("Booking cancelled successfully")
+      // Refresh the bookings list
+      const response = await axios.get("http://127.0.0.1:8000/api/users/bookings/", {
+        headers: { Authorization: `Bearer ${token}` },
+      })
+      setBookings(response.data)
+    } catch (error) {
+      toast.error("Failed to cancel booking.")
+    }
+  }
+
   if (!bookings.length) {
     return (
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <h2 className="text-3xl font-bold mb-4">My Bookings</h2>
-        <p className="text-gray-600">You haven't made any bookings yet.</p>
+      <div className="max-w-7xl mx-auto py-8">
+        <h1 className="text-4xl text-gray-800 py-4">
+          My<span className="text-cyan-600"> Bookings</span>
+        </h1>
+        <div className='flex flex-col justify-center items-center p-10'>
+          <IconBed size={128} className='text-gray-300' />
+          <p className='text-xl text-gray-400'>You haven't made any bookings yet.</p>
+        </div>
       </div>
     )
   }
@@ -80,7 +101,7 @@ export default function UserBookings() {
               </div>
             </div>
 
-            <div className="my-6 grid grid-cols-2 gap-2">
+            <div className="my-6 grid grid-cols-3 gap-2">
               <div className="flex justify-between items-center">
                 <div className="flex items-center">
                   <IconHotelService size={18} className="mr-2" />
@@ -99,14 +120,24 @@ export default function UserBookings() {
                 <IconAdjustmentsHorizontal size={18} className="mr-2" />
                 <p className="text-md text-gray-800 font-semibold">{booking.room_type} Room</p>
               </div>
+              <div className="flex items-center">
+                <IconCurrencyTaka size={20} className="mr-2" />
+                <p className="text-md text-gray-800 font-semibold">{booking.room_price} Tk</p>
+              </div>
+              <div className="flex items-center">
+                <IconMoon size={18} className="mr-2" />
+                <p className="text-md text-gray-800 font-semibold">{booking.total_nights} Night</p>
+              </div>
             </div>
 
             <div className="flex justify-between items-center">
               <div className="flex items-center">
                 <IconWallet size={20} className="mr-2" />
-                <p className="text-lg text-gray-800 font-semibold"> {booking.room_price} Tk</p>
+                <p className="text-lg text-gray-800 font-semibold">Total : {booking.total_price}.00 Tk</p>
               </div>
-              <button className="px-4 py-2 border border-red-300 text-red-600 rounded-lg hover:bg-red-50 transition-colors cursor-pointer">
+              <button 
+                onClick={() => handleCancelBooking(booking.id)}
+                className="px-4 py-2 border border-red-300 text-red-600 rounded-lg hover:bg-red-50 transition-colors cursor-pointer">
                 Cancel Booking
               </button>
             </div>

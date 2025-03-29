@@ -81,7 +81,7 @@ export default function UserProfile() {
       }
 
       {/* User Bookings Component */}
-      <UserBookings />
+      {user && <UserBookings />}
     </div>
   )
 }
